@@ -11,9 +11,31 @@ const essayClose =
 
 export const posts = [
   {
+    slug: 'sanders-ban-ai-development-bill',
+    title: 'Bernie Sanders’s Bill to Ban AI Development',
+    date: '2027-02-12',
+    author: 'Jane Austen',
+    topics: ['Policy'],
+    excerpt:
+      'Breaking down Sanders’ bill to ban artificial superintelligence.',
+    image: '/editorial/sanders-ban-ai-development-bill.jpg',
+    imageAlt: 'Bernie Sanders speaking at a hearing',
+    body: [
+      essayNote,
+      'Senator Bernie Sanders’s proposed ban on artificial superintelligence development arrived, in this placeholder telling, as both a moral statement and a legislative stress test. The bill’s headline ambition is easy to summarize: draw a bright line before systems that could outpace human oversight are built at scale. The harder work is defining that line in statute without freezing useful research or handing advantages to jurisdictions that refuse to play along.',
+      'Supporters argue that waiting for market discipline is a category error. If a technology’s downside includes irreversible concentration of power—or worse, loss of meaningful human control—then ex post regulation is too late by design. A ban, on this view, is not Luddism. It is a pause with teeth: no training runs above specified capability thresholds, no deployment of systems that meet a statutory definition of artificial superintelligence, and criminal or civil penalties for knowing violations.',
+      'Critics answer with three familiar objections. First, definitions. “Superintelligence” is a moving target in research papers; in law it risks becoming either uselessly vague or so specific that labs route around it with cosmetic changes. Second, enforcement. Compute can move, talent can move, and open-weight releases can travel faster than subpoenas. Third, opportunity cost. A blunt ban may chill dual-use safety research that needs access to frontier systems in order to study them.',
+      'Reading the bill as placeholder text, the interesting clauses are not the ban itself but the exceptions and the metrics. Who certifies that a model is below threshold? Which benchmarks count? Does “development” include fine-tuning, scaffolding, or only pretraining? Those details determine whether the statute is a real constraint or a press release with a bill number.',
+      'There is also a coalition problem. Labor, civil rights, national security, and long-termist safety advocates can share skepticism of unconstrained scaling while disagreeing sharply about remedies. A ban that satisfies one camp may alienate another. Sanders’s brand of economic populism emphasizes corporate concentration and worker power; AI safety communities often emphasize catastrophic risk. Bridging those frames is political work, not just drafting work.',
+      'Internationally, a unilateral U.S. ban would face free-rider dynamics. If peer labs elsewhere continue scaling, domestic firms will lobby that they are being asked to disarm alone. Any durable approach likely needs compute governance, export controls, and verification mechanisms that look more like arms-control infrastructure than a single prohibition.',
+      'For student readers, the bill is useful even as fiction. It forces concrete questions: What capability would you actually outlaw? How would you measure it? Who do you trust to measure it? And what do you do on day two if the measurement is gamed?',
+      essayClose,
+    ],
+  },
+  {
     slug: 'openai-huggingface-security-incident',
     title: 'The OpenAI / Hugging Face Incident',
-    date: '2027-02-12',
+    date: '2027-02-05',
     author: 'William Shakespeare',
     topics: ['Technical'],
     excerpt:
@@ -31,28 +53,6 @@ export const posts = [
       'Disclosure is the other half of the lesson. If an incident sits between “embarrassing ops failure” and “possible precursor to worse misuse,” organizations face a familiar dilemma. Too little disclosure and the ecosystem cannot learn. Too much, too fast, and opportunistic attackers get a map. A workable norm for placeholder purposes looks like this: confirm the class of failure quickly, share root-cause patterns once patched, and withhold exploit-ready detail until the relevant platforms have shipped fixes.',
       'For student researchers and small clubs, the takeaway is practical. When you wire an LLM to tools—even for a class project—ask what the tool can touch if the model is manipulated. Prefer local sandboxes. Prefer read-only scopes. Prefer separate keys that you can revoke without waking up three other services. The frontier labs’ problems are larger, but the shape of the mistake is shared.',
       'None of this resolves alignment. It does, however, clarify a near-term priority that often gets skipped in abstract debates: before a system can be “aligned,” its operational envelope has to be real. Evaluation pipelines that silently widen that envelope are not a footnote to AI safety. In this placeholder essay, they are the incident.',
-      essayClose,
-    ],
-  },
-  {
-    slug: 'sanders-ban-ai-development-bill',
-    title: 'Bernie Sanders’s Bill to Ban AI Development',
-    date: '2027-02-05',
-    author: 'Jane Austen',
-    topics: ['Policy'],
-    excerpt:
-      'Breaking down Sanders’ bill to ban artificial superintelligence.',
-    image: '/editorial/sanders-ban-ai-development-bill.jpg',
-    imageAlt: 'Bernie Sanders speaking at a hearing',
-    body: [
-      essayNote,
-      'Senator Bernie Sanders’s proposed ban on artificial superintelligence development arrived, in this placeholder telling, as both a moral statement and a legislative stress test. The bill’s headline ambition is easy to summarize: draw a bright line before systems that could outpace human oversight are built at scale. The harder work is defining that line in statute without freezing useful research or handing advantages to jurisdictions that refuse to play along.',
-      'Supporters argue that waiting for market discipline is a category error. If a technology’s downside includes irreversible concentration of power—or worse, loss of meaningful human control—then ex post regulation is too late by design. A ban, on this view, is not Luddism. It is a pause with teeth: no training runs above specified capability thresholds, no deployment of systems that meet a statutory definition of artificial superintelligence, and criminal or civil penalties for knowing violations.',
-      'Critics answer with three familiar objections. First, definitions. “Superintelligence” is a moving target in research papers; in law it risks becoming either uselessly vague or so specific that labs route around it with cosmetic changes. Second, enforcement. Compute can move, talent can move, and open-weight releases can travel faster than subpoenas. Third, opportunity cost. A blunt ban may chill dual-use safety research that needs access to frontier systems in order to study them.',
-      'Reading the bill as placeholder text, the interesting clauses are not the ban itself but the exceptions and the metrics. Who certifies that a model is below threshold? Which benchmarks count? Does “development” include fine-tuning, scaffolding, or only pretraining? Those details determine whether the statute is a real constraint or a press release with a bill number.',
-      'There is also a coalition problem. Labor, civil rights, national security, and long-termist safety advocates can share skepticism of unconstrained scaling while disagreeing sharply about remedies. A ban that satisfies one camp may alienate another. Sanders’s brand of economic populism emphasizes corporate concentration and worker power; AI safety communities often emphasize catastrophic risk. Bridging those frames is political work, not just drafting work.',
-      'Internationally, a unilateral U.S. ban would face free-rider dynamics. If peer labs elsewhere continue scaling, domestic firms will lobby that they are being asked to disarm alone. Any durable approach likely needs compute governance, export controls, and verification mechanisms that look more like arms-control infrastructure than a single prohibition.',
-      'For student readers, the bill is useful even as fiction. It forces concrete questions: What capability would you actually outlaw? How would you measure it? Who do you trust to measure it? And what do you do on day two if the measurement is gamed?',
       essayClose,
     ],
   },
