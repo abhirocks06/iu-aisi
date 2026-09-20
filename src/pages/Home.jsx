@@ -14,11 +14,11 @@ const activities = [
   },
   {
     title: 'Research Projects',
-    copy: 'Semester-long team projects on alignment, interpretability, evaluations, and federal/state policy.',
+    copy: 'Semester-long team projects on alignment, interpretability, evaluations, and governance frameworks.',
   },
   {
     title: 'Community Events',
-    copy: 'Expert speaker panels, workshops, and other gatherings that bring the AISI community together.',
+    copy: 'Speaker panels and networking sessions connecting students with researchers and industry leaders.',
   },
 ]
 
