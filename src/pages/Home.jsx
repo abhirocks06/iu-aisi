@@ -10,7 +10,7 @@ const activities = [
   },
   {
     title: 'Editorial',
-    copy: 'Student-led analysis and commentary examining emerging AI news, policy proposals, and technical research.',
+    copy: 'Student essays, commentary, and breakdowns covering current breakthroughs and policy debates.',
   },
   {
     title: 'Research Projects',
