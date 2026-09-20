@@ -10,7 +10,7 @@ const activities = [
   },
   {
     title: 'Editorial',
-    copy: 'Long-form essays, research breakdowns, and policy commentary on frontier AI developments.',
+    copy: 'Student-led analysis and commentary examining emerging AI news, policy proposals, and technical research.',
   },
   {
     title: 'Research Projects',
