@@ -9,14 +9,14 @@ const placeholderNote =
 export const posts = [
   {
     slug: 'sanders-ban-ai-development-bill',
-    title: 'Bernie Sanders’ Bill to Ban AI Development',
+    title: 'Senator Bernie Sanders’ Bill to Ban AI Development',
     date: '2027-02-12',
     author: 'Jane Austen',
     topics: ['Policy'],
     excerpt:
-      'Breaking down Sanders’ bill to ban artificial superintelligence.',
+      'Breaking down Senator Bernie Sanders’ bill to ban artificial superintelligence.',
     image: '/editorial/sanders-ban-ai-development-bill.jpg',
-    imageAlt: 'Bernie Sanders speaking at a hearing',
+    imageAlt: 'Senator Bernie Sanders speaking at a hearing',
     body: [
       placeholderNote,
       'It is a truth universally acknowledged, that a single man in possession of a good fortune must be in want of a wife. However little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered as the rightful property of some one or other of their daughters.',
