@@ -15,8 +15,9 @@ export default function Events() {
       </section>
 
       <JoinCTA
-        title="New members always welcome."
-        description="No CS or AI background required. Join the Discord for meetings, updates, and discussion."
+        mode="partner"
+        title="Interested in partnering with us?"
+        description="Reach out about speaking, co-hosting events, or other collaborations."
       />
     </div>
   )
