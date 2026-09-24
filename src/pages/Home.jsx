@@ -6,11 +6,11 @@ import { DISCORD_INVITE } from '../data/posts'
 const activities = [
   {
     title: 'Discussion Meetings',
-    copy: 'Weekly meetings to talk through new developments and what they signal about AI capabilities.',
+    copy: 'Weekly meetings on new developments, AI capabilities, and the U.S.-China race at the frontier.',
   },
   {
     title: 'Editorial',
-    copy: 'Student essays, commentary, and breakdowns covering current breakthroughs and policy debates.',
+    copy: 'Student essays and commentary on model releases, ASI policy fights, and other live debates in AI safety.',
   },
   {
     title: 'Research Projects',
@@ -18,7 +18,7 @@ const activities = [
   },
   {
     title: 'Community Events',
-    copy: 'Speaker panels and networking sessions connecting students with researchers and industry leaders.',
+    copy: 'Speaker panels and networking sessions with researchers, policymakers, and industry leaders.',
   },
 ]
 
