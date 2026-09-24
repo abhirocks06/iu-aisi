@@ -102,6 +102,11 @@ export const resourceSections = [
         href: 'https://www.dwarkesh.com/',
         description: 'Long conversations with leading AI researchers and thinkers.',
       },
+      {
+        title: 'The AI Power Podcast',
+        href: 'https://open.spotify.com/show/2Jvhb2bZs32UzYwLU5UWrm',
+        description: 'Gregory C. Allen on AI policy, U.S.-China competition, and how AI is reshaping global power.',
+      },
     ],
   },
   {
