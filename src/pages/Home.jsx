@@ -7,18 +7,20 @@ const activities = [
   {
     title: 'Discussion Meetings',
     copy: 'Weekly meetings on new developments, AI capabilities, and the U.S.-China race at the frontier.',
+    image: '/illustrations/discussion.svg',
+    imageAlt: '',
   },
   {
     title: 'Editorial',
-    copy: 'Student essays and commentary on model releases, ASI policy fights, and other live debates in AI safety.',
-  },
-  {
-    title: 'Research Projects',
-    copy: 'Semester-long team projects on alignment, interpretability, evaluations, and governance frameworks.',
+    copy: 'Student essays and commentary on lab incidents, policy fights, and other live debates in AI safety.',
+    image: '/illustrations/editorial.svg',
+    imageAlt: '',
   },
   {
     title: 'Community Events',
     copy: 'Speaker panels and networking sessions with researchers, policymakers, and industry leaders.',
+    image: '/illustrations/events.svg',
+    imageAlt: '',
   },
 ]
 
@@ -78,14 +80,24 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
           <h2 className="text-3xl font-medium tracking-tight text-ink sm:text-4xl">What We Do</h2>
 
-          <ul className="mt-12 grid gap-5 sm:grid-cols-2">
-            {activities.map((item, index) => (
-              <li key={item.title} className="border border-line bg-paper p-6 sm:p-8">
-                <span className="text-sm font-medium text-crimson">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <h3 className="mt-3 text-lg font-medium tracking-tight text-ink">{item.title}</h3>
-                <p className="mt-3 text-[0.95rem] leading-relaxed text-muted">{item.copy}</p>
+          <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {activities.map((item) => (
+              <li
+                key={item.title}
+                className="flex min-h-[22rem] flex-col overflow-hidden border border-line bg-paper sm:min-h-[24rem]"
+              >
+                <div className="flex min-h-0 flex-[5] items-center justify-center bg-paper px-5 pt-5 pb-2 sm:px-6 sm:pt-6 sm:pb-3">
+                  <img
+                    src={item.image}
+                    alt={item.imageAlt}
+                    className="pointer-events-none h-full w-full select-none object-contain"
+                    draggable={false}
+                  />
+                </div>
+                <div className="flex min-h-0 flex-[2.5] flex-col justify-center px-6 pt-3 pb-7 sm:px-8 sm:pt-4 sm:pb-8">
+                  <h3 className="text-lg font-medium tracking-tight text-ink">{item.title}</h3>
+                  <p className="mt-2.5 text-[0.95rem] leading-relaxed text-muted">{item.copy}</p>
+                </div>
               </li>
             ))}
           </ul>
