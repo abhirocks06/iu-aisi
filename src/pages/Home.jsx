@@ -11,9 +11,9 @@ const activities = [
     imageAlt: '',
   },
   {
-    title: 'Editorial',
-    copy: 'Student essays and commentary on lab incidents, policy fights, and other live debates in AI safety.',
-    image: '/illustrations/editorial.svg',
+    title: 'Research Projects',
+    copy: 'Team projects on alignment, interpretability, evaluations, and governance frameworks.',
+    image: '/illustrations/research.svg',
     imageAlt: '',
   },
   {

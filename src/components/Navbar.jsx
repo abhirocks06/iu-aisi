@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom'
 import { CONTACT_EMAIL } from '../data/posts'
 
 const links = [
-  { to: '/editorial', label: 'Editorial' },
+  { label: 'P241', placeholder: true },
   { to: '/events', label: 'Events' },
   { to: '/resources', label: 'Resources' },
   { to: '/team', label: 'Team' },
@@ -31,6 +31,26 @@ function BurgerButton({ open, onClick, onCrimson }) {
   )
 }
 
+function desktopClass(onCrimson, isActive) {
+  return [
+    'py-1 text-sm tracking-wide no-underline transition-colors',
+    onCrimson
+      ? isActive
+        ? 'font-medium text-white'
+        : 'text-white/75 hover:text-white'
+      : isActive
+        ? 'text-crimson'
+        : 'text-ink hover:text-crimson',
+  ].join(' ')
+}
+
+function mobileClass(isActive) {
+  return [
+    'mobile-menu-item text-3xl font-medium tracking-tight no-underline transition-colors sm:text-4xl',
+    isActive ? 'text-crimson' : 'text-ink hover:text-crimson',
+  ].join(' ')
+}
+
 function MobileMenuOverlay({ pathname, onClose }) {
   return (
     <div
@@ -43,25 +63,35 @@ function MobileMenuOverlay({ pathname, onClose }) {
       <div className="h-14 shrink-0 border-b border-line bg-paper" aria-hidden />
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-5 sm:px-8">
         <nav className="flex flex-col gap-5 pt-10" aria-label="Mobile">
-          {links.map((link, index) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.end}
-              className={({ isActive }) =>
-                [
-                  'mobile-menu-item text-3xl font-medium tracking-tight no-underline transition-colors sm:text-4xl',
-                  isActive ? 'text-crimson' : 'text-ink hover:text-crimson',
-                ].join(' ')
-              }
-              style={{ animationDelay: `${0.06 + index * 0.05}s` }}
-              onClick={() => {
-                if (pathname === link.to) onClose()
-              }}
-            >
-              {link.label}
-            </NavLink>
-          ))}
+          {links.map((link, index) =>
+            link.placeholder ? (
+              <a
+                key={link.label}
+                href="#"
+                className={mobileClass(false)}
+                style={{ animationDelay: `${0.06 + index * 0.05}s` }}
+                onClick={(event) => {
+                  event.preventDefault()
+                  onClose()
+                }}
+              >
+                {link.label}
+              </a>
+            ) : (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.end}
+                className={({ isActive }) => mobileClass(isActive)}
+                style={{ animationDelay: `${0.06 + index * 0.05}s` }}
+                onClick={() => {
+                  if (pathname === link.to) onClose()
+                }}
+              >
+                {link.label}
+              </NavLink>
+            ),
+          )}
         </nav>
 
         <div
@@ -148,27 +178,27 @@ export default function Navbar() {
           </Link>
 
           <nav className="ml-auto hidden items-center gap-8 md:flex" aria-label="Primary">
-            {links.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                end={link.end}
-                className={({ isActive }) =>
-                  [
-                    'py-1 text-sm tracking-wide no-underline transition-colors',
-                    onCrimson
-                      ? isActive
-                        ? 'font-medium text-white'
-                        : 'text-white/75 hover:text-white'
-                      : isActive
-                        ? 'text-crimson'
-                        : 'text-ink hover:text-crimson',
-                  ].join(' ')
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
+            {links.map((link) =>
+              link.placeholder ? (
+                <a
+                  key={link.label}
+                  href="#"
+                  className={desktopClass(onCrimson, false)}
+                  onClick={(event) => event.preventDefault()}
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  end={link.end}
+                  className={({ isActive }) => desktopClass(onCrimson, isActive)}
+                >
+                  {link.label}
+                </NavLink>
+              ),
+            )}
           </nav>
 
           <BurgerButton

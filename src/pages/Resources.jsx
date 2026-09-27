@@ -17,11 +17,12 @@ export default function Resources() {
               <h2 className="text-2xl font-medium tracking-tight text-ink">{section.title}</h2>
               <ul className="mt-6 divide-y divide-line border-y border-line">
                 {section.items.map((item) => (
-                  <li key={item.href}>
+                  <li key={item.href ?? item.title}>
                     <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noreferrer"
+                      href={item.href ?? '#'}
+                      {...(item.href
+                        ? { target: '_blank', rel: 'noreferrer' }
+                        : { onClick: (event) => event.preventDefault() })}
                       className="flex flex-col gap-3 py-5 no-underline transition-opacity hover:opacity-70 sm:flex-row sm:items-start sm:justify-between sm:gap-8"
                     >
                       <div className="min-w-0 max-w-3xl">

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { CONTACT_EMAIL, DISCORD_INVITE } from '../data/posts'
+import { DISCORD_INVITE } from '../data/posts'
 
 const socialLinks = [
   {
@@ -59,9 +59,13 @@ export default function Footer() {
           className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted md:justify-start"
           aria-label="Footer"
         >
-          <Link to="/editorial" className="no-underline hover:text-ink">
-            Editorial
-          </Link>
+          <a
+            href="#"
+            className="no-underline hover:text-ink"
+            onClick={(event) => event.preventDefault()}
+          >
+            P241
+          </a>
           <Link to="/events" className="no-underline hover:text-ink">
             Events
           </Link>
@@ -71,9 +75,6 @@ export default function Footer() {
           <Link to="/team" className="no-underline hover:text-ink">
             Team
           </Link>
-          <a href={`mailto:${CONTACT_EMAIL}`} className="no-underline hover:text-ink">
-            Contact
-          </a>
         </nav>
       </div>
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 border-t border-line/70 px-5 py-5 text-center sm:px-8 md:flex-row md:justify-between md:text-left">

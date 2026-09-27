@@ -1,5 +1,15 @@
 export const resourceSections = [
   {
+    title: 'Course',
+    items: [
+      {
+        title: 'P241: Foundations of Artificial Intelligence Ethics',
+        description:
+          'Intro to AI safety and alignment, taught by Professor Calum McNamara. Spring 2027.',
+      },
+    ],
+  },
+  {
     title: 'Foundations',
     items: [
       {
