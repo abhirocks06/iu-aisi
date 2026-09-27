@@ -29,25 +29,3 @@ export const officers = [
   },
 ]
 
-export const staffWriters = [
-  {
-    name: 'TBD',
-    role: 'Technical Staff Writer',
-    blurb: 'Placeholder: editorial roster coming soon.',
-  },
-  {
-    name: 'TBD',
-    role: 'Policy Staff Writer',
-    blurb: 'Placeholder: editorial roster coming soon.',
-  },
-  {
-    name: 'TBD',
-    role: 'Economics Staff Writer',
-    blurb: 'Placeholder: editorial roster coming soon.',
-  },
-  {
-    name: 'TBD',
-    role: 'Philosophy Staff Writer',
-    blurb: 'Placeholder: editorial roster coming soon.',
-  },
-]

@@ -1,5 +1,5 @@
 import JoinCTA from '../components/JoinCTA'
-import { facultyAdvisor, officers, staffWriters } from '../data/team'
+import { facultyAdvisor, officers } from '../data/team'
 
 function MemberCard({ member }) {
   return (
@@ -41,16 +41,6 @@ export default function Team() {
 
           <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {officers.map((member, index) => (
-              <MemberCard key={`${member.role}-${index}`} member={member} />
-            ))}
-          </ul>
-        </div>
-
-        <div className="animate-rise-delay-2 mt-16">
-          <h2 className="text-2xl font-medium tracking-tight text-ink">Editorial Staff</h2>
-
-          <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {staffWriters.map((member, index) => (
               <MemberCard key={`${member.role}-${index}`} member={member} />
             ))}
           </ul>
@@ -106,7 +96,7 @@ export default function Team() {
 
       <JoinCTA
         title="Want to join the team?"
-        description="Officer and staff writer roles fill as we launch. Reach out if you want to help build AISI."
+        description="Officer roles fill as we launch. Reach out if you want to help build AISI."
       />
     </div>
   )
