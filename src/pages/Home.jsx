@@ -84,7 +84,7 @@ export default function Home() {
             {activities.map((item) => (
               <li
                 key={item.title}
-                className="flex h-[22rem] flex-col overflow-hidden border border-line bg-paper sm:h-[24rem]"
+                className="flex h-[28rem] flex-col overflow-hidden border border-line bg-paper sm:h-auto sm:min-h-[24rem]"
               >
                 <div className="flex min-h-0 flex-[5] items-center justify-center bg-paper px-5 pt-5 pb-2 sm:px-6 sm:pt-6 sm:pb-3">
                   <img
