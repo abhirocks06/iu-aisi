@@ -65,12 +65,12 @@ export default function Home() {
           <div className="max-w-3xl space-y-5 text-lg leading-[1.75] text-ink-soft sm:text-xl sm:leading-[1.8]">
             <p>
               As AI systems grow more capable, ensuring they remain safe, controllable, and aligned
-              with human interests is one of the most consequential open problems of this decade.
+              with human interests is one of the most consequential open problems of our time.
             </p>
             <p>
-              The AI Safety Initiative (AISI) is a student-run interdisciplinary hub
-              for IUB students across computer science, philosophy, economics, and beyond to take on
-              the technical and governance challenges of advanced AI.
+              The AI Safety Initiative (AISI) is a community for IUB students across
+              computer science, philosophy, economics, and beyond to take on the technical and
+              governance challenges of advanced AI.
             </p>
           </div>
         </div>
