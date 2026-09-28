@@ -16,7 +16,12 @@ export default function Events() {
 
       <JoinCTA
         mode="partner"
-        title="Interested in partnering with us?"
+        title={
+          <>
+            Interested in partnering
+            <br className="sm:hidden" /> with us?
+          </>
+        }
         description="Reach out about speaking, co-hosting events, or other collaborations."
       />
     </div>
