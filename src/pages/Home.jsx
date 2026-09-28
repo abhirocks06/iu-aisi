@@ -47,8 +47,8 @@ export default function Home() {
               >
                 Join Discord
               </a>
-              <Link to="/resources" className="btn-ghost text-white">
-                Explore Resources
+              <Link to="/events" className="btn-ghost text-white">
+                Explore Events
               </Link>
             </div>
           </div>
