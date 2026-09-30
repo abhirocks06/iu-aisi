@@ -33,7 +33,9 @@ export default function Resources() {
                           {item.description}
                         </p>
                       </div>
-                      <span className="shrink-0 text-sm text-crimson sm:pt-1">Visit</span>
+                      <span className="shrink-0 text-sm font-bold text-crimson sm:pt-1" aria-hidden="true">
+                        →
+                      </span>
                     </a>
                   </li>
                 ))}
