@@ -64,12 +64,12 @@ export default function Home() {
           </h2>
           <div className="max-w-3xl space-y-5 text-lg leading-[1.75] text-ink-soft sm:text-xl sm:leading-[1.8]">
             <p>
-              Frontier AI systems are gaining capability faster than our ability to understand,
-              evaluate, or control them. Whether we can keep them aligned with human interests is one
-              of the defining technical, philosophical, and governance problems of our time.
+              It’s hard to miss how fast AI is moving. Frontier AI systems are gaining capability
+              faster than our ability to understand, evaluate, or control them. Keeping them aligned
+              with human interests remains one of the most consequential problems of our time.
             </p>
             <p>
-              We’re a community of students, faculty, and researchers at Indiana University working
+              We’re a community of students and faculty at Indiana University working
               to reduce the catastrophic risks from advanced AI. We study how these models behave,
               along with the ethical, economic, and geopolitical implications of deploying them.
             </p>
