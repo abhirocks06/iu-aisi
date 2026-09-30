@@ -140,11 +140,6 @@ export const resourceSections = [
         href: 'https://sparai.org/',
         description: 'A part-time remote research fellowship pairing mentees with AI safety mentors.',
       },
-      {
-        title: '80,000 Hours Job Board',
-        href: 'https://jobs.80000hours.org/',
-        description: 'Open roles across AI safety, policy, and related high-impact paths.',
-      },
     ],
   },
 ]
