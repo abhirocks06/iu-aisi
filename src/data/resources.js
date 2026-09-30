@@ -5,7 +5,7 @@ export const resourceSections = [
       {
         title: 'P241: Foundations of Artificial Intelligence Ethics',
         description:
-          'Intro to AI safety and alignment, taught by Professor Calum McNamara. Spring 2027.',
+          'Interpretability, alignment, and the ethics of advanced AI. Taught by Professor Calum McNamara.',
       },
     ],
   },
