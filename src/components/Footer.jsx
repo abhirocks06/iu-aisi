@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { DISCORD_INVITE } from '../data/posts'
+import { COURSE_URL, DISCORD_INVITE } from '../data/posts'
 
 const socialLinks = [
   {
@@ -60,9 +60,10 @@ export default function Footer() {
           aria-label="Footer"
         >
           <a
-            href="#"
+            href={COURSE_URL}
+            target="_blank"
+            rel="noreferrer"
             className="no-underline hover:text-ink"
-            onClick={(event) => event.preventDefault()}
           >
             P241
           </a>
