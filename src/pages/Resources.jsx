@@ -23,19 +23,19 @@ export default function Resources() {
                       {...(item.href
                         ? { target: '_blank', rel: 'noreferrer' }
                         : { onClick: (event) => event.preventDefault() })}
-                      className="flex flex-col gap-3 py-5 no-underline transition-opacity hover:opacity-70 sm:flex-row sm:items-start sm:justify-between sm:gap-8"
+                      className="block py-5 no-underline transition-opacity hover:opacity-70"
                     >
-                      <div className="min-w-0 max-w-3xl">
-                        <span className="text-lg font-medium tracking-tight text-ink">
+                      <div className="flex items-start justify-between gap-4">
+                        <span className="min-w-0 text-lg font-medium tracking-tight text-ink">
                           {item.title}
                         </span>
-                        <p className="mt-2 text-[0.95rem] leading-relaxed text-muted">
-                          {item.description}
-                        </p>
+                        <span className="shrink-0 text-sm font-bold text-crimson" aria-hidden="true">
+                          →
+                        </span>
                       </div>
-                      <span className="shrink-0 text-sm font-bold text-crimson sm:pt-1" aria-hidden="true">
-                        →
-                      </span>
+                      <p className="mt-2 max-w-3xl text-[0.95rem] leading-relaxed text-muted">
+                        {item.description}
+                      </p>
                     </a>
                   </li>
                 ))}
