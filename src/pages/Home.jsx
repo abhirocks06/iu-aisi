@@ -64,13 +64,14 @@ export default function Home() {
           </h2>
           <div className="max-w-3xl space-y-5 text-lg leading-[1.75] text-ink-soft sm:text-xl sm:leading-[1.8]">
             <p>
-              As AI systems grow more capable, ensuring they remain safe, controllable, and aligned
-              with human interests is one of the most consequential open problems of our time.
+              Frontier AI systems are gaining capability faster than our ability to understand,
+              evaluate, or control them. Whether we can keep them aligned with human interests is one
+              of the defining technical, philosophical, and governance problems of our time.
             </p>
             <p>
-              The AI Safety Initiative (AISI) is a community for IUB students across
-              computer science, philosophy, economics, and beyond to take on the technical and
-              governance challenges of advanced AI.
+              We’re a community of students, faculty, and researchers at Indiana University working
+              to reduce the catastrophic risks from advanced AI. We study how these models behave,
+              along with the ethical, economic, and geopolitical implications of deploying them.
             </p>
           </div>
         </div>

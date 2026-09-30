@@ -33,10 +33,10 @@ function BurgerButton({ open, onClick, onCrimson }) {
 
 function desktopClass(onCrimson, isActive) {
   return [
-    'py-1 text-sm tracking-wide no-underline transition-colors',
+    'py-1 text-sm font-medium tracking-wide no-underline transition-colors',
     onCrimson
       ? isActive
-        ? 'font-medium text-white'
+        ? 'text-white'
         : 'text-white/75 hover:text-white'
       : isActive
         ? 'text-crimson'

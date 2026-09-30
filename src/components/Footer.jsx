@@ -56,7 +56,7 @@ export default function Footer() {
           </span>
         </Link>
         <nav
-          className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted md:justify-start"
+          className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-medium text-muted md:justify-start"
           aria-label="Footer"
         >
           <a
