@@ -1,10 +1,10 @@
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { CONTACT_EMAIL, COURSE_URL } from '../data/posts'
+import { CONTACT_EMAIL } from '../data/posts'
 
 const links = [
-  { href: COURSE_URL, label: 'P241', external: true },
+  { label: 'P241', placeholder: true },
   { to: '/events', label: 'Events' },
   { to: '/resources', label: 'Resources' },
   { to: '/team', label: 'Team' },
@@ -64,15 +64,16 @@ function MobileMenuOverlay({ pathname, onClose }) {
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-5 sm:px-8">
         <nav className="flex flex-col gap-5 pt-10" aria-label="Mobile">
           {links.map((link, index) =>
-            link.external ? (
+            link.placeholder ? (
               <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
+                key={link.label}
+                href="#"
                 className={mobileClass(false)}
                 style={{ animationDelay: `${0.06 + index * 0.05}s` }}
-                onClick={onClose}
+                onClick={(event) => {
+                  event.preventDefault()
+                  onClose()
+                }}
               >
                 {link.label}
               </a>
@@ -178,13 +179,12 @@ export default function Navbar() {
 
           <nav className="ml-auto hidden items-center gap-8 md:flex" aria-label="Primary">
             {links.map((link) =>
-              link.external ? (
+              link.placeholder ? (
                 <a
-                  key={link.href}
-                  href={link.href}
-                  target="_blank"
-                  rel="noreferrer"
+                  key={link.label}
+                  href="#"
                   className={desktopClass(onCrimson, false)}
+                  onClick={(event) => event.preventDefault()}
                 >
                   {link.label}
                 </a>

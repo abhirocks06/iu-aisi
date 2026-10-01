@@ -1,12 +1,9 @@
-import { COURSE_URL } from './posts'
-
 export const resourceSections = [
   {
     title: 'Course',
     items: [
       {
         title: 'P241: Foundations of Artificial Intelligence Ethics',
-        href: COURSE_URL,
         description:
           'Interpretability, alignment, and the ethics of advanced AI. Taught by Professor Calum McNamara.',
       },
