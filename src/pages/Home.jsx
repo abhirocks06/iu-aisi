@@ -6,7 +6,7 @@ import { DISCORD_INVITE } from '../data/posts'
 const activities = [
   {
     title: 'Discussion Meetings',
-    copy: 'Weekly meetings on new developments, AI capabilities, and the U.S.-China race at the frontier.',
+    copy: 'Weekly roundtables on new AI developments, emerging capabilities, and U.S.-China race at the frontier.',
     image: '/illustrations/discussion.svg',
     imageAlt: '',
   },
