@@ -29,3 +29,15 @@ export const officers = [
   },
 ]
 
+export const advisoryBoard = [
+  {
+    name: 'Calum McNamara',
+    role: 'Faculty Advisor',
+    website: 'https://calum-mcnamara.github.io/',
+  },
+  {
+    name: 'Veronica Gordi',
+    role: 'Advisor',
+    website: 'https://www.linkedin.com/in/vgordi/',
+  },
+]

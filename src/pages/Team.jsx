@@ -1,5 +1,5 @@
 import JoinCTA from '../components/JoinCTA'
-import { facultyAdvisor, officers } from '../data/team'
+import { advisoryBoard, officers } from '../data/team'
 
 function MemberCard({ member }) {
   return (
@@ -22,6 +22,50 @@ function MemberCard({ member }) {
       )}
       <h3 className="mt-4 text-lg font-medium tracking-tight text-ink">{member.name}</h3>
       <p className="mt-1 text-sm text-crimson">{member.role}</p>
+    </li>
+  )
+}
+
+function AdvisorCard({ member }) {
+  const content = (
+    <>
+      {member.photo ? (
+        <img
+          src={member.photo}
+          alt={member.name}
+          width={448}
+          height={560}
+          className="aspect-[4/5] w-full object-cover object-center"
+        />
+      ) : (
+        <div
+          className="flex aspect-[4/5] w-full items-center justify-center bg-neutral-100 text-sm text-muted"
+          aria-hidden="true"
+        >
+          Photo
+        </div>
+      )}
+      <h3 className="mt-4 text-lg font-medium tracking-tight text-ink">{member.name}</h3>
+      <p className="mt-1 text-sm text-crimson">{member.role}</p>
+    </>
+  )
+
+  return (
+    <li>
+      {member.website ? (
+        <a
+          href={member.website}
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-col items-center border border-line p-5 text-center no-underline transition-opacity hover:opacity-70 sm:p-6"
+        >
+          {content}
+        </a>
+      ) : (
+        <div className="flex flex-col items-center border border-line p-5 text-center sm:p-6">
+          {content}
+        </div>
+      )}
     </li>
   )
 }
@@ -50,35 +94,9 @@ export default function Team() {
           <h2 className="text-2xl font-medium tracking-tight text-ink">Advisory Board</h2>
 
           <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <li>
-              <a
-                href={facultyAdvisor.website}
-                target="_blank"
-                rel="noreferrer"
-                className="flex flex-col items-center border border-line p-5 text-center no-underline transition-opacity hover:opacity-70 sm:p-6"
-              >
-                {facultyAdvisor.photo ? (
-                  <img
-                    src={facultyAdvisor.photo}
-                    alt={facultyAdvisor.name}
-                    width={448}
-                    height={560}
-                    className="aspect-[4/5] w-full object-cover object-[62%_center]"
-                  />
-                ) : (
-                  <div
-                    className="flex aspect-[4/5] w-full items-center justify-center bg-neutral-100 text-sm text-muted"
-                    aria-hidden="true"
-                  >
-                    Photo
-                  </div>
-                )}
-                <h3 className="mt-4 text-lg font-medium tracking-tight text-ink">
-                  {facultyAdvisor.name}
-                </h3>
-                <p className="mt-1 text-sm text-crimson">{facultyAdvisor.role}</p>
-              </a>
-            </li>
+            {advisoryBoard.map((member) => (
+              <AdvisorCard key={member.name} member={member} />
+            ))}
           </ul>
         </div>
       </section>
