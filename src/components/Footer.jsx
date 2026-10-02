@@ -100,8 +100,8 @@ export default function Footer() {
       </div>
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 border-t border-line/70 px-5 py-5 text-center sm:px-8 md:flex-row md:justify-between md:text-left">
         <p className="text-xs leading-relaxed text-muted">
-          This is a student-run organization and is not
-          <br className="sm:hidden" /> an official website of Indiana University.
+          This organization is a registered student organization of Indiana
+          University.
         </p>
         <nav className="flex shrink-0 items-center justify-center gap-0.5 md:gap-3" aria-label="Social">
           {socialLinks.map((link) => (
