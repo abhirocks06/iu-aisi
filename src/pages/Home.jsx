@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
       <section className="bg-crimson text-white">
-        <div className="mx-auto grid max-w-6xl items-center justify-items-center gap-12 px-5 pt-16 pb-24 text-center sm:px-8 sm:pt-20 sm:pb-28 lg:grid-cols-[1fr_auto] lg:justify-items-stretch lg:gap-20 lg:pt-24 lg:pb-32 lg:text-left">
+        <div className="mx-auto grid max-w-6xl items-center justify-items-center gap-12 px-5 py-24 text-center sm:px-8 sm:py-28 lg:grid-cols-[1fr_auto] lg:justify-items-stretch lg:gap-20 lg:py-32 lg:text-left">
           <div className="flex flex-col items-center lg:items-start">
             <h1 className="animate-rise text-[2rem] font-medium leading-[1.1] tracking-tight sm:text-5xl lg:text-[3.15rem]">
               AI Safety Initiative
@@ -71,7 +71,7 @@ export default function Home() {
             </p>
             <p>
               We’re a community of students and faculty at Indiana University working
-              to reduce the catastrophic risks from advanced AI. We study how these models behave,
+              to reduce catastrophic risks from advanced AI. We study how these models behave,
               along with the ethical, economic, and geopolitical implications of deploying them.
             </p>
           </div>
