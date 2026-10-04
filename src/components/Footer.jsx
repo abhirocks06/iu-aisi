@@ -55,7 +55,7 @@ export default function Footer() {
       <div className="mx-auto flex max-w-site flex-col items-center gap-5 px-5 py-6 text-center sm:px-8 md:flex-row md:items-center md:justify-between md:gap-4 md:text-left">
         <Link
           to="/"
-          className="mb-1 flex select-none items-center gap-2 no-underline md:mb-0"
+          className="mb-1 select-none no-underline md:mb-0"
           onClick={(event) => {
             if (pathname === '/') {
               event.preventDefault()
@@ -63,16 +63,8 @@ export default function Footer() {
             }
           }}
         >
-          <img
-            src="/aisi-mark.png"
-            alt=""
-            width={28}
-            height={28}
-            draggable={false}
-            className="pointer-events-none h-7 w-7 shrink-0 object-contain"
-          />
           <span className="text-sm font-medium text-ink">
-            AI Safety Initiative at IU Bloomington
+            © AI Safety Initiative at IU Bloomington
           </span>
         </Link>
         <nav
