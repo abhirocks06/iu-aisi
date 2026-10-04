@@ -38,7 +38,7 @@ export const advisoryBoard = [
   },
   {
     name: 'Veronica Gordi',
-    role: 'Advisor',
+    role: 'Senior Advisor',
     website: 'https://www.linkedin.com/in/vgordi/',
   },
 ]

@@ -111,7 +111,7 @@ export default function Team() {
           </ul>
         </div>
 
-        <div className="mt-20 border-t border-line pt-16">
+        <div className="mt-20">
           <h2 className="font-display text-2xl tracking-tight text-ink sm:text-3xl">
             Advisory Board
           </h2>
