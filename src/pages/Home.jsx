@@ -204,7 +204,13 @@ export default function Home() {
         </div>
         {/* The graph fills the right of the hero out to the window edge and fades in toward
             the headline. It needs the wide layout; phones get the text alone. */}
-        <WireGraph className="animate-rise-delay absolute inset-y-0 right-0 hidden w-[62%] [mask-image:linear-gradient(to_right,transparent,#000_22%)] lg:block" />
+        <WireGraph className="animate-rise-delay absolute inset-y-0 right-0 hidden w-[62%] lg:block" />
+        {/* A paper-coloured gradient over the graph's left edge; cheaper than masking an
+            animating canvas. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-[48%] hidden w-[14%] bg-gradient-to-r from-paper to-transparent lg:block"
+        />
       </section>
 
       <section className="bg-surface">

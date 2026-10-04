@@ -93,11 +93,9 @@ export default function WireGraph({ className = '' }) {
     let W = 0
     let H = 0
     // The halftone sits on its own canvas behind the main one, so the browser composites
-    // the two layers and nothing is copied per frame.
+    // the two layers instead of copying one into the other.
     const screen = screenRef.current
     const sctx = screen.getContext('2d')
-    let lastScreen = -Infinity
-    let lastFocus = null
     const size = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       W = canvas.clientWidth
@@ -109,10 +107,7 @@ export default function WireGraph({ className = '' }) {
       screen.height = canvas.height
       sctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
-    const resize = new ResizeObserver(() => {
-      size()
-      lastScreen = -Infinity
-    })
+    const resize = new ResizeObserver(size)
     resize.observe(canvas)
     size()
 
@@ -226,41 +221,60 @@ export default function WireGraph({ className = '' }) {
     const drawLabels = (list, focus, dt) => {
       const ease = 1 - Math.exp(-dt / 200)
       const placed = []
-      const discs = list.map((s) => ({ id: s.n.id, x: s.x, y: s.y, r: s.r + 4 }))
+      const discs = list.map((s) => ({ id: s.n.id, x: s.x, y: s.y, z: s.z, r: s.r + 4 }))
       for (const s of [...list].sort((p, q) => q.z - p.z)) {
         const { n } = s
         if (!n.handle) continue
-        const dx = s.x - W * CX
-        const dy = s.y - H * 0.5
-        const target = Math.hypot(dx, dy) > 8 ? Math.atan2(dy * 0.6, dx) : (n.ang ?? 0)
-        if (n.ang === undefined) n.ang = target
-        n.ang += Math.atan2(Math.sin(target - n.ang), Math.cos(target - n.ang)) * ease
-        const c = Math.cos(n.ang)
-        const sn = Math.sin(n.ang)
         ctx.font = handleFont
         const w1 = ctx.measureText(n.handle).width
         ctx.font = metaFont
         const w2 = ctx.measureText(n.short).width
         const bw = Math.max(w1, w2)
         const bh = 32
-        const ax = s.x + c * (s.r + 16)
-        const ay = s.y + sn * (s.r + 16)
-        const freeLeft = ax + 4 * c - (bw * (1 - c)) / 2
-        const left = Math.max(8, Math.min(W - bw - 8, freeLeft))
-        // Pushed in from the edge, a label can land on its own node; only then does that count.
-        const pinnedToEdge = Math.abs(left - freeLeft) > 1
-        const top = Math.max(8, Math.min(H - bh - 8, ay + 3 * sn - (bh * (1 - sn)) / 2))
-        const box = { l: left - 4, t: top - 2, r: left + bw + 4, b: top + bh + 2 }
-        const hitsBox = placed.some((o) => box.l < o.r && box.r > o.l && box.t < o.b && box.b > o.t)
-        const hitsNode = discs.some((d) => (d.id !== n.id || pinnedToEdge)
-          && d.x + d.r > box.l && d.x - d.r < box.r && d.y + d.r > box.t && d.y - d.r < box.b)
-        const wanted = s.z > -0.25 && focus !== n.id && !hitsBox && !hitsNode ? 1 : 0
+        // Where the label block lands for a given angle around its node.
+        const layout = (ang) => {
+          const c = Math.cos(ang)
+          const sn = Math.sin(ang)
+          const ax = s.x + c * (s.r + 16)
+          const ay = s.y + sn * (s.r + 16)
+          const freeLeft = ax + 4 * c - (bw * (1 - c)) / 2
+          const left = Math.max(8, Math.min(W - bw - 8, freeLeft))
+          const top = Math.max(8, Math.min(H - bh - 8, ay + 3 * sn - (bh * (1 - sn)) / 2))
+          const box = { l: left - 4, t: top - 2, r: left + bw + 4, b: top + bh + 2 }
+          // Pushed in from an edge, a label can land on its own node; only then does that count.
+          const pinned = Math.abs(left - freeLeft) > 1
+          const blocked = placed.some((o) => box.l < o.r && box.r > o.l && box.t < o.b && box.b > o.t)
+            || discs.some((d) => ((d.id !== n.id && d.z > s.z) || (d.id === n.id && pinned))
+              && d.x + d.r > box.l && d.x - d.r < box.r && d.y + d.r > box.t && d.y - d.r < box.b)
+          return { c, sn, ax, ay, left, top, box, blocked }
+        }
+        // Aim away from the graph's centre; if that side is blocked (an edge, a nearer node,
+        // another label), try the mirrored side; hide only when both are taken.
+        const dx = s.x - W * CX
+        const dy = s.y - H * 0.5
+        const out = Math.hypot(dx, dy) > 8 ? Math.atan2(dy * 0.6, dx) : (n.ang ?? 0)
+        const target = [out, Math.PI - out].find((ang) => !layout(ang).blocked)
+        if (target !== undefined) {
+          if (n.ang === undefined) n.ang = target
+          n.ang += Math.atan2(Math.sin(target - n.ang), Math.cos(target - n.ang)) * ease
+        }
+        const { c, sn, ax, ay, left, top, box } = layout(n.ang ?? out)
+        // A label changes state only after the new state has held for a quarter second,
+        // so it doesn't blink as nodes pass each other.
+        const clear = s.z > -0.55 && focus !== n.id && target !== undefined
+        if (n.shown === undefined) n.shown = clear
+        n.since = clear === n.shown ? 0 : (n.since ?? 0) + dt
+        if (n.since > 250) {
+          n.shown = clear
+          n.since = 0
+        }
+        const wanted = n.shown ? 1 : 0
         n.vis = (n.vis ?? wanted) + (wanted - (n.vis ?? wanted)) * ease
-        if (wanted) placed.push(box)
+        if (n.shown) placed.push(box)
         if (n.vis < 0.02) continue
 
-        const depth = Math.max(0.45, Math.min(1, 0.72 + s.z * 0.55))
-        const a = (focus ? 0.3 : 1) * depth * n.vis
+        // Visible labels are fully opaque; only hover dims them.
+        const a = (focus ? 0.3 : 1) * n.vis
         ctx.globalAlpha = a * 0.4
         ctx.strokeStyle = ink
         ctx.lineWidth = 0.75
@@ -327,11 +341,6 @@ export default function WireGraph({ className = '' }) {
 
     const frame = (now) => {
       const focus = state.hover || state.pinned
-      // Idle drift is slow, so every other frame is enough; interaction gets full rate.
-      if (!focus && !state.drag && now - last < 30) {
-        frameId = requestAnimationFrame(frame)
-        return
-      }
       const dt = Math.min(64, now - last)
       last = now
       if (!reduce && !state.drag && !focus) state.yaw += dt * 0.00012
@@ -342,14 +351,7 @@ export default function WireGraph({ className = '' }) {
       cp = Math.cos(state.pitch)
       sp = Math.sin(state.pitch)
 
-      // The halftone layer barely changes between frames, so it is rebuilt into its own
-      // canvas about ten times a second while idle, and every frame during interaction.
-      const refresh = focus !== lastFocus || state.drag || now - lastScreen > 100
-      lastFocus = focus
-      if (refresh) {
-        lastScreen = now
-        drawScreens(focus)
-      }
+      drawScreens(focus)
 
       shown = nodes.map((n) => {
         const [x, y, z, f] = project(n.p)
