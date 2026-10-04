@@ -120,7 +120,8 @@ const KERNEL = [
 ]
 
 function drawNetwork(canvas, root) {
-  const box = root.getBoundingClientRect()
+  // The canvas runs past the network on every side so dust can settle around it.
+  const box = canvas.getBoundingClientRect()
   const W = box.width
   const H = box.height
   if (!W || !H) return
@@ -179,6 +180,27 @@ function drawNetwork(canvas, root) {
   for (const b of outs) {
     for (let i = 0; i < 110; i += 1) splat(red, b.x + gauss() * 10, b.y + gauss() * 10, 0.3)
   }
+  // Dust around the scene, like the hero's older incidents, kept clear of the text.
+  const text = [...root.querySelectorAll('li')].map((el) => {
+    const r = el.getBoundingClientRect()
+    return [r.left - box.left - 16, r.top - box.top - 16, r.right - box.left + 16, r.bottom - box.top + 16]
+  })
+  const net = root.getBoundingClientRect()
+  const inNet = (x, y) =>
+    x > net.left - box.left && x < net.right - box.left && y > net.top - box.top && y < net.bottom - box.top
+  const clear = (x, y) => !inNet(x, y) && !text.some(([l, t, r, b]) => x > l && x < r && y > t && y < b)
+  const dust = new Float32Array(gw * gh)
+  for (let c = 0; c < 26; c += 1) {
+    const cx = rand() * W
+    const cy = rand() * H
+    if (!clear(cx, cy)) continue
+    const sigma = 14 + rand() * 26
+    for (let i = 0; i < 40; i += 1) {
+      const x = cx + gauss() * sigma
+      const y = cy + gauss() * sigma
+      if (clear(x, y)) splat(dust, x, y, 0.5)
+    }
+  }
 
   const size = (v, gain) => (v < 0.08 ? 0 : Math.min(CELL - 1, Math.max(1, Math.round(Math.sqrt(v * gain) * CELL * 0.5))))
   const screen = (grid, color, alpha, gain) => {
@@ -191,6 +213,7 @@ function drawNetwork(canvas, root) {
       }
     }
   }
+  screen(dust, '#171717', 0.2, 0.6)
   screen(red, crimson, 0.6, 0.5)
   g.globalAlpha = 1
 
@@ -254,7 +277,7 @@ function Network() {
 
   return (
     <div ref={ref} className="relative hidden grid-cols-[14rem_minmax(6rem,11rem)_minmax(0,34rem)] lg:grid">
-      <canvas ref={canvasRef} className="wwd-reveal pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
+      <canvas ref={canvasRef} className="wwd-reveal pointer-events-none absolute -top-20 -right-[22rem] -bottom-20 -left-16 h-[calc(100%+10rem)] w-[calc(100%+26rem)]" aria-hidden="true" />
 
       {/* Input layer: every topic, grouped by activity, spread over the layer's height. */}
       <ul className="flex flex-col justify-between py-2">
