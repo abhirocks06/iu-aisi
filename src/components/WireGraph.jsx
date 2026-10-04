@@ -141,8 +141,11 @@ export default function WireGraph({ className = '' }) {
         for (let gx = 0; gx < gw; gx += 1) {
           const v = grid[gy * gw + gx]
           if (v < 0.08) continue
-          const d = Math.min(CELL - 1, Math.max(1, Math.round(Math.sqrt(v * gain) * CELL * 0.5)))
-          g.rect(gx * CELL - (d >> 1), gy * CELL - (d >> 1), d, d)
+          // Sizes and positions snap to device pixels: on a 2x screen that is half a CSS
+          // pixel, so dots change size in finer steps than before without anti-aliasing.
+          const d = Math.min(CELL - 1, Math.max(1, Math.round(Math.sqrt(v * gain) * CELL * 0.5 * dpr) / dpr))
+          const o = Math.round((CELL * 0.5 - d / 2) * dpr) / dpr
+          g.rect(gx * CELL - CELL * 0.5 + o, gy * CELL - CELL * 0.5 + o, d, d)
         }
       }
       g.fill()
@@ -200,7 +203,7 @@ export default function WireGraph({ className = '' }) {
       ctx.globalAlpha = 1
     }
 
-    const state = { yaw: 0.3, pitch: 0.28, drag: null, hover: null, pinned: null }
+    const state = { yaw: 0.3, pitch: 0.28, speed: reduce ? 0 : 1, drag: null, hover: null, pinned: null }
     let cy = 1
     let sy = 0
     let cp = 1
@@ -251,23 +254,40 @@ export default function WireGraph({ className = '' }) {
               && d.x + d.r > box.l && d.x - d.r < box.r && d.y + d.r > box.t && d.y - d.r < box.b)
           return { c, sn, ax, ay, left, top, box, blocked }
         }
-        // Aim away from the graph's centre; if that side is blocked (an edge, a nearer node,
-        // another label), try the mirrored side; hide only when both are taken.
+        // Aim away from the graph's centre, or at the mirrored side. A label keeps its side
+        // until that side has been blocked (an edge, a nearer node, another label) for a
+        // third of a second while the other is clear, so it never swings back and forth.
         const dx = s.x - W * CX
         const dy = s.y - H * 0.5
         const out = Math.hypot(dx, dy) > 8 ? Math.atan2(dy * 0.6, dx) : (n.ang ?? 0)
-        const target = [out, Math.PI - out].find((ang) => !layout(ang).blocked)
-        if (target !== undefined) {
+        const sides = [out, Math.PI - out]
+        n.side ??= layout(out).blocked && !layout(sides[1]).blocked ? 1 : 0
+        const here = !layout(sides[n.side]).blocked
+        const there = !layout(sides[1 - n.side]).blocked
+        n.stuck = here || !there ? 0 : (n.stuck ?? 0) + dt
+        if (n.stuck > 330) {
+          // Switch sides by fading out, moving while invisible, and fading back in, rather
+          // than sweeping the text across the node.
+          n.side = 1 - n.side
+          n.stuck = 0
+          n.jumping = true
+        }
+        const target = here || n.stuck > 0 ? sides[n.side] : undefined
+        if (n.jumping && (n.vis ?? 0) < 0.05) {
+          n.ang = sides[n.side]
+          n.jumping = false
+        }
+        if (target !== undefined && !n.jumping) {
           if (n.ang === undefined) n.ang = target
           n.ang += Math.atan2(Math.sin(target - n.ang), Math.cos(target - n.ang)) * ease
         }
         const { c, sn, ax, ay, left, top, box } = layout(n.ang ?? out)
         // A label changes state only after the new state has held for a quarter second,
         // so it doesn't blink as nodes pass each other.
-        const clear = s.z > -0.55 && focus !== n.id && target !== undefined
+        const clear = s.z > -0.55 && focus !== n.id && target !== undefined && !n.jumping
         if (n.shown === undefined) n.shown = clear
         n.since = clear === n.shown ? 0 : (n.since ?? 0) + dt
-        if (n.since > 250) {
+        if (n.since > 250 || (n.jumping && n.shown)) {
           n.shown = clear
           n.since = 0
         }
@@ -344,9 +364,12 @@ export default function WireGraph({ className = '' }) {
 
     const frame = (now) => {
       const focus = state.hover || state.pinned
-      const dt = Math.min(64, now - last)
+      const dt = Math.max(0, Math.min(64, now - last))
       last = now
-      if (!reduce && !state.drag && !focus) state.yaw += dt * 0.00012
+      // Drift eases to a stop while a node is pointed at or dragged, and eases back after.
+      const want = reduce || state.drag || focus ? 0 : 1
+      state.speed += (want - state.speed) * (1 - Math.exp(-dt / 300))
+      state.yaw += dt * 0.00012 * state.speed
       ctx.clearRect(0, 0, W, H)
 
       cy = Math.cos(state.yaw)
