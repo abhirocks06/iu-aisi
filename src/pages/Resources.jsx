@@ -13,10 +13,12 @@ function ResourceLink({ item }) {
         : { onClick: (event) => event.preventDefault() })}
       className="group block no-underline transition-opacity hover:opacity-70"
     >
-      <span className="text-base font-medium tracking-tight text-ink group-hover:underline group-hover:underline-offset-4">
+      <span className="text-base font-normal tracking-tight text-ink group-hover:underline group-hover:underline-offset-4">
         {item.title}
       </span>
-      <p className="mt-1.5 text-sm leading-relaxed text-muted">{item.description}</p>
+      {item.description ? (
+        <p className="mt-1.5 text-sm leading-relaxed text-muted">{item.description}</p>
+      ) : null}
     </a>
   )
 }
@@ -63,7 +65,9 @@ export default function Resources() {
         <div className="animate-rise-delay grid gap-14 sm:gap-16 lg:grid-cols-2 lg:gap-x-16 lg:gap-y-20">
           {otherSections.map((section) => (
             <div key={section.title}>
-              <h2 className="font-display text-2xl tracking-tight text-ink">{section.title}</h2>
+              <h2 className="font-display text-2xl font-normal tracking-tight text-ink">
+                {section.title}
+              </h2>
               <ul className="mt-6 space-y-6">
                 {section.items.map((item) => (
                   <li key={item.href ?? item.title}>

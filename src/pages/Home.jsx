@@ -24,53 +24,62 @@ const activities = [
   },
 ]
 
-/** Soft editorial bottom graphics — closer to Goodfire / hero language than icon line art. */
+/** Polished bottom graphics — Goodfire-style soft forms with edge fade. */
 function CardArt({ kind }) {
   if (kind === 'discussion') {
     return (
       <svg viewBox="0 0 320 180" className="h-full w-full" aria-hidden="true">
         <defs>
-          <linearGradient id="art-d" x1="40" y1="20" x2="280" y2="160" gradientUnits="userSpaceOnUse">
-            <stop stopColor="white" stopOpacity="0.55" />
+          <linearGradient id="art-d-fade" x1="160" y1="0" x2="160" y2="180" gradientUnits="userSpaceOnUse">
+            <stop stopColor="white" stopOpacity="0" />
+            <stop offset="0.35" stopColor="white" stopOpacity="1" />
+            <stop offset="1" stopColor="white" stopOpacity="1" />
+          </linearGradient>
+          <mask id="art-d-mask">
+            <rect width="320" height="180" fill="url(#art-d-fade)" />
+          </mask>
+          <linearGradient id="art-d-stroke" x1="40" y1="40" x2="300" y2="160" gradientUnits="userSpaceOnUse">
+            <stop stopColor="white" stopOpacity="0.5" />
             <stop offset="1" stopColor="white" stopOpacity="0.08" />
           </linearGradient>
         </defs>
-        <path
-          d="M20 150C48 96 92 58 148 52c56-6 96 28 132 18 28-8 48-36 70-28"
-          fill="none"
-          stroke="url(#art-d)"
-          strokeWidth="1.1"
-        />
-        <path
-          d="M10 168C54 118 108 84 168 80c52-4 86 30 122 22 30-6 52-28 78-18"
-          fill="none"
-          stroke="white"
-          strokeOpacity="0.28"
-          strokeWidth="1"
-        />
-        <ellipse cx="118" cy="118" rx="54" ry="34" fill="white" fillOpacity="0.08" />
-        <ellipse cx="196" cy="128" rx="70" ry="40" fill="white" fillOpacity="0.12" />
-        <ellipse cx="248" cy="142" rx="48" ry="28" fill="white" fillOpacity="0.07" />
+        <g mask="url(#art-d-mask)">
+          {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+            <path
+              key={i}
+              d={`M-10 ${120 + i * 8}C40 ${70 + i * 6} 100 ${48 + i * 4} 160 ${52 + i * 3}C220 ${56 + i * 3} 270 ${78 + i * 5} 340 ${68 + i * 4}`}
+              fill="none"
+              stroke="url(#art-d-stroke)"
+              strokeWidth={1.05 - i * 0.06}
+              strokeOpacity={0.85 - i * 0.08}
+            />
+          ))}
+          <ellipse cx="150" cy="130" rx="78" ry="42" fill="white" fillOpacity="0.06" />
+          <ellipse cx="210" cy="138" rx="64" ry="36" fill="white" fillOpacity="0.09" />
+        </g>
       </svg>
     )
   }
 
   if (kind === 'research') {
-    const cols = 8
-    const rows = 5
+    const cols = 10
+    const rows = 6
     const cells = []
     for (let r = 0; r < rows; r += 1) {
       for (let c = 0; c < cols; c += 1) {
-        const t = ((r * 3 + c * 5) % 11) / 11
+        const ridge = Math.exp(-(((c - 5.5) / 4) ** 2 + ((r - 2.5) / 2.4) ** 2))
+        const t = Math.min(1, ridge * 0.85 + (((r * 3 + c * 5) % 7) / 7) * 0.25)
+        if (t < 0.12) continue
         cells.push(
           <rect
             key={`${r}-${c}`}
-            x={36 + c * 32}
-            y={48 + r * 22}
-            width="22"
-            height="14"
+            x={28 + c * 27}
+            y={42 + r * 20}
+            width="18"
+            height="12"
+            rx="1"
             fill="white"
-            fillOpacity={0.06 + t * 0.28}
+            fillOpacity={0.05 + t * 0.32}
           />,
         )
       }
@@ -78,18 +87,16 @@ function CardArt({ kind }) {
     return (
       <svg viewBox="0 0 320 180" className="h-full w-full" aria-hidden="true">
         <defs>
-          <linearGradient id="art-r" x1="0" y1="0" x2="0" y2="180" gradientUnits="userSpaceOnUse">
-            <stop stopColor="white" stopOpacity="0" />
-            <stop offset="0.35" stopColor="white" stopOpacity="0.5" />
-            <stop offset="1" stopColor="white" stopOpacity="0.15" />
-          </linearGradient>
+          <radialGradient id="art-r-fade" cx="50%" cy="55%" r="58%">
+            <stop offset="0%" stopColor="white" stopOpacity="1" />
+            <stop offset="55%" stopColor="white" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="white" stopOpacity="0" />
+          </radialGradient>
+          <mask id="art-r-mask">
+            <rect width="320" height="180" fill="url(#art-r-fade)" />
+          </mask>
         </defs>
-        <g opacity="0.9">{cells}</g>
-        <path
-          d="M28 40h264M28 160h264"
-          stroke="url(#art-r)"
-          strokeWidth="1"
-        />
+        <g mask="url(#art-r-mask)">{cells}</g>
       </svg>
     )
   }
@@ -97,34 +104,50 @@ function CardArt({ kind }) {
   return (
     <svg viewBox="0 0 320 180" className="h-full w-full" aria-hidden="true">
       <defs>
-        <linearGradient id="art-e" x1="160" y1="20" x2="160" y2="170" gradientUnits="userSpaceOnUse">
-          <stop stopColor="white" stopOpacity="0.4" />
-          <stop offset="1" stopColor="white" stopOpacity="0.05" />
+        <linearGradient id="art-e-fade" x1="160" y1="20" x2="160" y2="170" gradientUnits="userSpaceOnUse">
+          <stop stopColor="white" stopOpacity="0" />
+          <stop offset="0.4" stopColor="white" stopOpacity="1" />
+          <stop offset="1" stopColor="white" stopOpacity="1" />
+        </linearGradient>
+        <mask id="art-e-mask">
+          <rect width="320" height="180" fill="url(#art-e-fade)" />
+        </mask>
+        <linearGradient id="art-e-stroke" x1="160" y1="40" x2="160" y2="160" gradientUnits="userSpaceOnUse">
+          <stop stopColor="white" stopOpacity="0.45" />
+          <stop offset="1" stopColor="white" stopOpacity="0.08" />
         </linearGradient>
       </defs>
-      <path
-        d="M40 150c28-46 62-72 120-72s92 26 120 72"
-        fill="none"
-        stroke="url(#art-e)"
-        strokeWidth="1.15"
-      />
-      <path
-        d="M64 150c22-34 48-52 96-52s74 18 96 52"
-        fill="none"
-        stroke="white"
-        strokeOpacity="0.22"
-        strokeWidth="1"
-      />
-      <path
-        d="M92 150c16-22 34-34 68-34s52 12 68 34"
-        fill="none"
-        stroke="white"
-        strokeOpacity="0.16"
-        strokeWidth="1"
-      />
-      <circle cx="160" cy="58" r="18" fill="white" fillOpacity="0.1" />
-      <circle cx="160" cy="58" r="8" fill="white" fillOpacity="0.22" />
-      <path d="M24 158h272" stroke="white" strokeOpacity="0.2" strokeWidth="1" />
+      <g mask="url(#art-e-mask)">
+        <path
+          d="M36 156c30-52 68-78 124-78s94 26 124 78"
+          fill="none"
+          stroke="url(#art-e-stroke)"
+          strokeWidth="1.15"
+        />
+        <path
+          d="M62 156c24-38 54-58 98-58s74 20 98 58"
+          fill="none"
+          stroke="white"
+          strokeOpacity="0.22"
+          strokeWidth="1"
+        />
+        <path
+          d="M90 156c18-26 40-40 70-40s52 14 70 40"
+          fill="none"
+          stroke="white"
+          strokeOpacity="0.14"
+          strokeWidth="1"
+        />
+        <path
+          d="M118 156c12-16 26-24 42-24s30 8 42 24"
+          fill="white"
+          fillOpacity="0.06"
+          stroke="white"
+          strokeOpacity="0.12"
+          strokeWidth="1"
+        />
+        <path d="M28 156h264" stroke="white" strokeOpacity="0.14" strokeWidth="1" />
+      </g>
     </svg>
   )
 }
@@ -142,7 +165,7 @@ function ActivityCard({ item }) {
         {item.copy}
       </p>
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[48%]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[50%] opacity-90"
         aria-hidden="true"
       >
         <CardArt kind={item.art} />
@@ -179,7 +202,7 @@ export default function Home() {
             </div>
           </div>
 
-          <HeroVisual className="animate-rise-delay mx-auto lg:mx-0 lg:justify-self-end" />
+          <HeroVisual className="mx-auto lg:mx-0 lg:justify-self-end" />
         </div>
       </section>
 
