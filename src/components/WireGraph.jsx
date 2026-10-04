@@ -124,13 +124,26 @@ export default function WireGraph({ className = '' }) {
         else grids[k].fill(0)
       }
     }
+    // Bilinear: a point's weight is shared between the four cells around it by its exact
+    // position, so as it moves its dot fades from one cell into the next instead of jumping.
     const splat = (grid, x, y, w) => {
-      const cx = Math.round(x / CELL)
-      const cy = Math.round(y / CELL)
-      for (const [dx, dy, k] of KERNEL) {
-        const gx = cx + dx
-        const gy = cy + dy
-        if (gx >= 0 && gy >= 0 && gx < gw && gy < gh) grid[gy * gw + gx] += w * k
+      const fx = x / CELL
+      const fy = y / CELL
+      const x0 = Math.floor(fx)
+      const y0 = Math.floor(fy)
+      const tx = fx - x0
+      const ty = fy - y0
+      const corners = [
+        [x0, y0, (1 - tx) * (1 - ty)], [x0 + 1, y0, tx * (1 - ty)],
+        [x0, y0 + 1, (1 - tx) * ty], [x0 + 1, y0 + 1, tx * ty],
+      ]
+      for (const [bx, by, bw] of corners) {
+        if (bw === 0) continue
+        for (const [dx, dy, k] of KERNEL) {
+          const gx = bx + dx
+          const gy = by + dy
+          if (gx >= 0 && gy >= 0 && gx < gw && gy < gh) grid[gy * gw + gx] += w * k * bw
+        }
       }
     }
     const drawScreen = (g, grid, color, gain, alpha) => {
@@ -369,7 +382,9 @@ export default function WireGraph({ className = '' }) {
       // Drift eases to a stop while a node is pointed at or dragged, and eases back after.
       const want = reduce || state.drag || focus ? 0 : 1
       state.speed += (want - state.speed) * (1 - Math.exp(-dt / 300))
-      state.yaw += dt * 0.00012 * state.speed
+      // Same on-screen speed as the full-window artifact (graph scale 495px at 1440x900):
+      // a smaller graph turns proportionally faster so its nodes cover the same pixels.
+      state.yaw += dt * 0.00012 * (495 / Math.max(1, Math.min(W * 0.4, H * 0.44))) * state.speed
       ctx.clearRect(0, 0, W, H)
 
       cy = Math.cos(state.yaw)
