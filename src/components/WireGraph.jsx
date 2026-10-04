@@ -190,10 +190,13 @@ export default function WireGraph({ className = '' }) {
       return sprite
     }
     const halftoneDisc = (x, y, r, color, alpha) => {
-      const rr = Math.max(2, Math.round(r))
+      // Sprites are cached per whole-pixel radius but drawn scaled to the exact radius,
+      // so bubbles grow and shrink smoothly with perspective instead of in 1px steps.
+      const rr = Math.max(2, Math.ceil(r))
       const sprite = discSprite(color, rr)
+      const half = (rr + 1) * (r / rr)
       ctx.globalAlpha = alpha
-      ctx.drawImage(sprite, x - rr - 1, y - rr - 1, rr * 2 + 2, rr * 2 + 2)
+      ctx.drawImage(sprite, x - half, y - half, half * 2, half * 2)
       ctx.globalAlpha = 1
     }
 
