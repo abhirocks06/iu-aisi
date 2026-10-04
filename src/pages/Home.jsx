@@ -211,7 +211,7 @@ export default function Home() {
               Our mission
             </h2>
           </div>
-          <div className="animate-rise-delay max-w-xl space-y-5 text-base leading-[1.75] text-ink-soft sm:text-lg sm:leading-[1.8]">
+          <div className="animate-rise-delay max-w-[calc(36rem-2.5ch)] space-y-5 text-base leading-[1.75] text-ink-soft sm:text-lg sm:leading-[1.8]">
             <p>
               It’s hard to miss how fast AI is moving. Frontier AI systems are gaining capability
               faster than our ability to understand, evaluate, or control them, and keeping them
