@@ -6,12 +6,13 @@ export const facultyAdvisor = {
   website: 'https://calum-mcnamara.github.io/',
 }
 
+/** Each member may list `links: { linkedin, github, website }`, shown as icons under the name. */
 export const officers = [
   {
     name: 'Abhinav Sisodiya',
     role: 'President',
     blurb: 'Placeholder: leadership bio coming soon.',
-    website: 'https://www.linkedin.com/in/abhinavsisodiya',
+    links: { linkedin: 'https://www.linkedin.com/in/abhinavsisodiya' },
   },
   {
     name: 'TBD',
@@ -34,11 +35,11 @@ export const advisoryBoard = [
   {
     name: 'Calum McNamara',
     role: 'Faculty Advisor',
-    website: 'https://calum-mcnamara.github.io/',
+    links: { website: 'https://calum-mcnamara.github.io/' },
   },
   {
     name: 'Veronica Gordi',
     role: 'Senior Advisor',
-    website: 'https://www.linkedin.com/in/vgordi/',
+    links: { linkedin: 'https://www.linkedin.com/in/vgordi/' },
   },
 ]

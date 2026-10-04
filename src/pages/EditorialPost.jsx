@@ -58,7 +58,7 @@ export default function EditorialPost() {
       </article>
 
       <section className="mt-auto bg-crimson text-white">
-        <div className="mx-auto flex max-w-[90rem] flex-col items-center gap-8 px-5 py-20 text-center sm:px-8 sm:py-24 md:flex-row md:items-center md:justify-between md:text-left">
+        <div className="mx-auto flex max-w-site flex-col items-center gap-8 px-5 py-20 text-center sm:px-8 sm:py-24 md:flex-row md:items-center md:justify-between md:text-left">
           <div className="min-w-0 md:max-w-none">
             <h2 className="text-3xl font-medium tracking-tight">More from the Editorial.</h2>
             <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-white/70 md:mx-0">
