@@ -7,7 +7,7 @@ export const resourceSections = [
       {
         title: 'P241: Foundations of Artificial Intelligence Ethics',
         href: COURSE_URL,
-        description: 'A no-background-required course on AI alignment and interpretability.',
+        description: 'An introductory IU course on AI alignment and interpretability.',
       },
     ],
   },

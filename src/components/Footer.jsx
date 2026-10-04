@@ -1,8 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
-import { BEINVOLVED_URL, COURSE_URL, DISCORD_INVITE, INSTAGRAM_URL } from '../data/posts'
+import { BEINVOLVED_URL, DISCORD_INVITE, INSTAGRAM_URL } from '../data/posts'
 
 const navLinks = [
-  { href: COURSE_URL, label: 'P241', external: true },
   { to: '/events', label: 'Events' },
   { to: '/resources', label: 'Resources' },
   { to: '/team', label: 'Team' },

@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import { getPostBySlug } from '../data/posts'
@@ -28,11 +28,22 @@ function titleForPath(pathname) {
   return SITE_NAME
 }
 
+function scrollToTop() {
+  window.scrollTo(0, 0)
+  document.documentElement.scrollTop = 0
+  document.body.scrollTop = 0
+}
+
 export default function Layout() {
   const { pathname } = useLocation()
 
-  useEffect(() => {
-    window.scrollTo(0, 0)
+  useLayoutEffect(() => {
+    scrollToTop()
+    // Catch browser scroll restoration that runs after layout
+    const frame = window.requestAnimationFrame(() => {
+      scrollToTop()
+    })
+    return () => window.cancelAnimationFrame(frame)
   }, [pathname])
 
   useEffect(() => {

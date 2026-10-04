@@ -1,10 +1,9 @@
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { COURSE_URL, DISCORD_INVITE } from '../data/posts'
+import { DISCORD_INVITE } from '../data/posts'
 
 const links = [
-  { href: COURSE_URL, label: 'P241', external: true },
   { to: '/events', label: 'Events' },
   { to: '/resources', label: 'Resources' },
   { to: '/team', label: 'Team' },
