@@ -180,9 +180,9 @@ function drawNetwork(canvas, root) {
   for (const b of outs) {
     for (let i = 0; i < 110; i += 1) splat(red, b.x + gauss() * 10, b.y + gauss() * 10, 0.3)
   }
-  // Dust frames the scene, like the hero's older incidents: densest near the network and
-  // thinning outward, balanced left and right (less above and below), on roughly a fifth
-  // of the empty space, and never on text or among the weights.
+  // Crimson dust frames the scene on a diagonal, like the hero's grain: two masses, top
+  // right and bottom left, thinning outward, with a little along the other edges. It
+  // covers roughly a fifth of the empty space, never text or the weights.
   const pad = (r, p) => [r.left - box.left - p, r.top - box.top - p, r.right - box.left + p, r.bottom - box.top + p]
   const text = [...root.querySelectorAll('[data-text]')].map((el) => pad(el.getBoundingClientRect(), 14))
   const x0 = Math.min(...ins.map((a) => a.x)) - 12
@@ -198,10 +198,10 @@ function drawNetwork(canvas, root) {
   const left = net.left - box.left
   const right = net.right - box.left
   const sides = [
-    [0.36, () => [left + 60 - Math.abs(gauss()) * 150, top + rand() * (bottom - top)]],
-    [0.36, () => [right - 40 + Math.abs(gauss()) * 170, top + rand() * (bottom - top)]],
-    [0.14, () => [left + rand() * (right - left), top - Math.abs(gauss()) * 60]],
-    [0.14, () => [left + rand() * (right - left), bottom + Math.abs(gauss()) * 60]],
+    [0.4, () => [right + 60 + gauss() * 110, top - 10 + gauss() * 80]],
+    [0.4, () => [left + 20 + gauss() * 110, bottom - 40 + gauss() * 80]],
+    [0.1, () => [right - 40 + Math.abs(gauss()) * 170, top + rand() * (bottom - top)]],
+    [0.1, () => [left + 60 - Math.abs(gauss()) * 150, top + rand() * (bottom - top)]],
   ]
   let placed = 0
   for (let tries = 0; tries < 400 && placed < 22; tries += 1) {
@@ -229,7 +229,7 @@ function drawNetwork(canvas, root) {
       }
     }
   }
-  screen(dust, '#171717', 0.2, 0.6)
+  screen(dust, crimson, 0.32, 0.6)
   screen(red, crimson, 0.6, 0.5)
   g.globalAlpha = 1
 
@@ -293,7 +293,7 @@ function Network() {
 
   return (
     <div ref={ref} className="relative hidden grid-cols-[14rem_minmax(6rem,11rem)_minmax(0,34rem)] lg:grid">
-      <canvas ref={canvasRef} className="wwd-reveal pointer-events-none absolute -top-20 -right-[22rem] -bottom-20 -left-[16rem] h-[calc(100%+10rem)] w-[calc(100%+38rem)]" aria-hidden="true" />
+      <canvas ref={canvasRef} className="wwd-reveal pointer-events-none absolute -top-32 -right-[22rem] -bottom-20 -left-[16rem] h-[calc(100%+13rem)] w-[calc(100%+38rem)]" aria-hidden="true" />
 
       {/* Input layer: every topic, grouped by activity, spread over the layer's height. */}
       <ul className="flex flex-col justify-between py-2">
