@@ -178,7 +178,7 @@ export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
       <section className="bg-paper">
-        <div className="mx-auto grid max-w-site items-center gap-12 px-5 pt-16 pb-20 sm:px-8 sm:pt-20 sm:pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16 lg:pt-24 lg:pb-28">
+        <div className="mx-auto grid max-w-site items-center gap-6 px-5 pt-6 pb-16 sm:gap-12 sm:px-8 sm:pt-20 sm:pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16 lg:pt-24 lg:pb-28">
           <div className="animate-rise">
             <h1 className="font-display text-[2.4rem] leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.35rem]">
               AI Safety Initiative at&nbsp;IU&nbsp;Bloomington
@@ -202,7 +202,8 @@ export default function Home() {
             </div>
           </div>
 
-          <HeroVisual className="animate-rise-delay mx-auto lg:mx-0 lg:justify-self-end" />
+          {/* On phones the art leads; on wide screens it sits to the right of the text. */}
+          <HeroVisual className="animate-rise-delay order-first mx-auto max-w-[20rem] sm:max-w-md lg:order-none lg:mx-0 lg:max-w-lg lg:justify-self-end" />
         </div>
       </section>
 

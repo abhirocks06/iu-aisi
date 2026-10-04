@@ -2,7 +2,7 @@
 export default function HeroVisual({ className = '' }) {
   return (
     <div
-      className={`relative aspect-[5/4] w-full max-w-lg overflow-hidden rounded-sm bg-paper select-none ${className}`}
+      className={`relative aspect-[5/4] w-full overflow-hidden rounded-sm bg-paper select-none ${className}`}
       aria-hidden="true"
     >
       <div className="bg-grid-fade pointer-events-none absolute inset-0" />
