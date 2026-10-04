@@ -12,7 +12,7 @@ const PAGE_TITLES = {
   '/team': 'Team',
 }
 
-const SITE_NAME = 'AI Safety Initiative'
+const SITE_NAME = 'AI Safety Initiative @ IU'
 
 function titleForPath(pathname) {
   const exact = PAGE_TITLES[pathname]
