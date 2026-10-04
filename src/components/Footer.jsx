@@ -1,6 +1,13 @@
 import { Link, useLocation } from 'react-router-dom'
 import { BEINVOLVED_URL, COURSE_URL, DISCORD_INVITE } from '../data/posts'
 
+const navLinks = [
+  { href: COURSE_URL, label: 'P241', external: true },
+  { to: '/events', label: 'Events' },
+  { to: '/resources', label: 'Resources' },
+  { to: '/team', label: 'Team' },
+]
+
 const socialLinks = [
   {
     label: 'Discord',
@@ -43,10 +50,10 @@ export default function Footer() {
 
   return (
     <footer className="bg-paper">
-      <div className="mx-auto flex max-w-site flex-col items-center gap-5 px-5 py-6 text-center sm:px-8 md:flex-row md:items-center md:justify-between md:gap-4 md:text-left">
+      <div className="mx-auto grid max-w-site grid-cols-1 items-center gap-6 px-5 py-10 text-center sm:px-8 lg:grid-cols-3 lg:gap-4 lg:text-left">
         <Link
           to="/"
-          className="mb-1 select-none no-underline md:mb-0"
+          className="select-none justify-self-center no-underline lg:justify-self-start"
           onClick={(event) => {
             if (pathname === '/') {
               event.preventDefault()
@@ -58,35 +65,38 @@ export default function Footer() {
             © AI Safety Initiative at IU Bloomington
           </span>
         </Link>
+
         <nav
-          className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-normal text-muted md:justify-start"
+          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-normal tracking-wide text-ink-soft lg:flex-nowrap"
           aria-label="Footer"
         >
-          <a
-            href={COURSE_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="no-underline hover:text-ink"
-          >
-            P241
-          </a>
-          <Link to="/events" className="no-underline hover:text-ink">
-            Events
-          </Link>
-          <Link to="/resources" className="no-underline hover:text-ink">
-            Resources
-          </Link>
-          <Link to="/team" className="no-underline hover:text-ink">
-            Team
-          </Link>
+          {navLinks.map((link) =>
+            link.external ? (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+                className="no-underline transition-colors hover:text-ink"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="no-underline transition-colors hover:text-ink"
+              >
+                {link.label}
+              </Link>
+            ),
+          )}
         </nav>
-      </div>
-      <div className="mx-auto flex max-w-site flex-col items-center gap-4 border-t border-line/70 px-5 py-5 text-center sm:px-8 md:flex-row md:justify-between md:text-left">
-        <p className="text-xs leading-relaxed text-muted">
-          This organization is a registered student
-          <br className="sm:hidden" /> organization of Indiana University.
-        </p>
-        <nav className="flex shrink-0 items-center justify-center gap-0.5 md:gap-3" aria-label="Social">
+
+        <nav
+          className="flex shrink-0 items-center justify-center gap-0.5 justify-self-center lg:justify-self-end lg:gap-3"
+          aria-label="Social"
+        >
           {socialLinks.map((link) => (
             <a
               key={link.label}
@@ -94,7 +104,7 @@ export default function Footer() {
               target="_blank"
               rel="noreferrer"
               aria-label={link.label}
-              className="inline-flex h-9 w-8 items-center justify-center text-muted transition-colors hover:text-ink md:h-auto md:w-auto"
+              className="inline-flex h-9 w-8 items-center justify-center text-muted transition-colors hover:text-ink lg:h-auto lg:w-auto"
             >
               {link.icon}
             </a>
