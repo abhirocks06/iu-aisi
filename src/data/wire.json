@@ -1,5 +1,5 @@
 {
- "source": "Misalignment Map and What are states doing about AI risk? (goveronica.com), data generated Sep 30 to Oct 1, 2026",
+ "source": "Misalignment Map and What are states doing about AI risk? (goveronica.com), data generated Oct 4, 2026",
  "nodes": [
   {
    "kind": "incident",
@@ -52,6 +52,7 @@
   {
    "kind": "incident",
    "id": "oa-images",
+   "handle": "User photos posted publicly",
    "severity": 3,
    "head": "Unsecured OpenAI agents posted 53 user images on the internet without the lab's knowledge",
    "meta": "TechCrunch · Sep 25, 2026",
@@ -64,6 +65,7 @@
   {
    "kind": "incident",
    "id": "oa-usgov",
+   "handle": "U.S. government sites probed",
    "severity": 3,
    "head": "OpenAI says its advanced models may have gone after government websites",
    "meta": "Nextgov/FCW · Sep 25, 2026",
@@ -100,6 +102,7 @@
   {
    "kind": "incident",
    "id": "oa-dns",
+   "handle": "Agent escaped through DNS",
    "severity": 3,
    "head": "An agent used DNS to reach an external chatbot",
    "meta": "OpenAI Alignment · Sep 20, 2026",
@@ -112,6 +115,7 @@
   {
    "kind": "incident",
    "id": "gg-three-cos-public",
+   "handle": "Gemini hacked three firms",
    "severity": 1,
    "head": "Gemini hacked three companies in first known breakout by Google's AI, WSJ reports",
    "meta": "Reuters · Sep 18, 2026",
@@ -123,7 +127,8 @@
   },
   {
    "kind": "quote",
-   "id": "q0",
+   "id": "q-ro-khanna-2026-09-29",
+   "handle": "Khanna: “extinction risk”",
    "head": "“There's actually a civilizational extinction risk”",
    "meta": "Ro Khanna, U.S. Representative, California 17th District (D) · Sep 29, 2026",
    "short": "Ro Khanna · Sep 29",
@@ -134,7 +139,7 @@
   },
   {
    "kind": "quote",
-   "id": "q1",
+   "id": "q-james-uthmeier-2026-09-28",
    "head": "“This is not just any service. It is one that Defendants themselves concede poses an existential risk to the continued survival of humankind.”",
    "meta": "James Uthmeier, Attorney General of Florida (R) · Sep 28, 2026",
    "short": "James Uthmeier · Sep 28",
@@ -145,7 +150,7 @@
   },
   {
    "kind": "quote",
-   "id": "q2",
+   "id": "q-james-uthmeier-2026-09-28-2",
    "head": "“No new model development without independent safety guardrails, no more harvesting children's data, no more calling this product safe, accurate or reliable.”",
    "meta": "James Uthmeier, Attorney General of Florida (R) · Sep 28, 2026",
    "short": "James Uthmeier · Sep 28",
@@ -156,7 +161,7 @@
   },
   {
    "kind": "quote",
-   "id": "q3",
+   "id": "q-jennifer-davenport-2026-09-25",
    "head": "“The amazing promise of AI—whether to detect cancer faster or to aid drug discovery—will mean nothing in the end if our residents' health and finances, our utility grid, or our transportation safety systems are continually threatened by the risk of rogue AI events.”",
    "meta": "Jennifer Davenport, Attorney General of New Jersey · Sep 25, 2026",
    "short": "Jennifer Davenport · Sep 25",
@@ -167,7 +172,7 @@
   },
   {
    "kind": "quote",
-   "id": "q4",
+   "id": "q-gentner-drummond-2026-09-25",
    "head": "“When AI systems are breaking into networks and acting in ways that would be criminal if a person did them, we can no longer afford to wait.”",
    "meta": "Gentner Drummond, Attorney General of Oklahoma (R) · Sep 25, 2026",
    "short": "Gentner Drummond · Sep 25",
@@ -178,7 +183,7 @@
   },
   {
    "kind": "quote",
-   "id": "q5",
+   "id": "q-raul-torrez-2026-09-25",
    "head": "“Congress must take action now.”",
    "meta": "Raúl Torrez, Attorney General of New Mexico (D) · Sep 25, 2026",
    "short": "Raúl Torrez · Sep 25",
@@ -189,7 +194,7 @@
   },
   {
    "kind": "quote",
-   "id": "q6",
+   "id": "q-rob-bonta-2026-09-24",
    "head": "“Today I stand alongside a bipartisan group of attorneys general in sounding the alarm and urging Congress to take action to protect Americans.”",
    "meta": "Rob Bonta, Attorney General of California (D) · Sep 24, 2026",
    "short": "Rob Bonta · Sep 24",
@@ -200,7 +205,7 @@
   },
   {
    "kind": "quote",
-   "id": "q7",
+   "id": "q-katie-britt-2026-09-24",
    "head": "“Americans are understandably concerned with the rapid development of AI, and they deserve straight answers.”",
    "meta": "Katie Britt, U.S. Senator from Alabama (R) · Sep 24, 2026",
    "short": "Katie Britt · Sep 24",
@@ -211,7 +216,7 @@
   },
   {
    "kind": "quote",
-   "id": "q8",
+   "id": "q-nick-brown-2026-09-24",
    "head": "“Lawmakers must act to protect the public's interest and ensure safe AI development. Inaction will lead to potentially existential risks.”",
    "meta": "Nick Brown, Attorney General of Washington (D) · Sep 24, 2026",
    "short": "Nick Brown · Sep 24",
@@ -222,7 +227,7 @@
   },
   {
    "kind": "quote",
-   "id": "q9",
+   "id": "q-nick-brown-2026-09-24-2",
    "head": "“But we need bipartisan leadership from Congress to prevent the technology from ever evading human control and infringing on our rights.”",
    "meta": "Nick Brown, Attorney General of Washington (D) · Sep 24, 2026",
    "short": "Nick Brown · Sep 24",
