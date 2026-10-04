@@ -72,7 +72,7 @@ export default function Footer() {
             className="pointer-events-none h-7 w-7 shrink-0 object-contain"
           />
           <span className="text-sm font-medium text-ink">
-            AI Safety Initiative (AISI) at IU Bloomington
+            AI Safety Initiative at IU Bloomington
           </span>
         </Link>
         <nav

@@ -202,7 +202,7 @@ export default function Home() {
             </div>
           </div>
 
-          <HeroVisual className="mx-auto lg:mx-0 lg:justify-self-end" />
+          <HeroVisual className="animate-rise-delay mx-auto lg:mx-0 lg:justify-self-end" />
         </div>
       </section>
 
