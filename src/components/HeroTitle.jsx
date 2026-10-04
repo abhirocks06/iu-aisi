@@ -40,7 +40,7 @@ export default function HeroTitle({ className }) {
     // Fixed layer above the sticky nav for the letters in flight.
     const layer = document.createElement('div')
     layer.setAttribute('aria-hidden', 'true')
-    layer.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:70;'
+    layer.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:70;display:none;'
     const fliers = kept.map((el) => {
       const s = document.createElement('span')
       s.textContent = el.textContent
@@ -48,7 +48,8 @@ export default function HeroTitle({ className }) {
       layer.appendChild(s)
       return s
     })
-    document.body.appendChild(layer)
+    // Reduced motion never flies letters, so the layer is only added when it can be used.
+    if (!reduce) document.body.appendChild(layer)
 
     let from = []
     let to = []
