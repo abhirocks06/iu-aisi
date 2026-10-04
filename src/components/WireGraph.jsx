@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import wire from '../data/wire.json'
+import { createHalftone } from './halftoneGL'
 
 /*
  * Home hero art: a slowly turning 3D graph of the 10 newest misalignment incidents
@@ -17,16 +18,12 @@ const ANCHORS = {
   q0: 'Khanna: “extinction risk”',
 }
 
-const DUST = 'rgba(23, 23, 23, 0.34)'
 const EDGE = 'rgba(23, 23, 23, 0.32)'
 const CELL = 5
+// Drift speed in radians per millisecond, scaled to match the artifact's on-screen speed.
+const DRIFT = 0.00032
 // Horizontal centre of the graph within its box; the box bleeds to the window edge.
 const CX = 0.56
-const KERNEL = [
-  [0, 0, 1], [1, 0, 0.45], [-1, 0, 0.45], [0, 1, 0.45], [0, -1, 0.45],
-  [1, 1, 0.2], [-1, 1, 0.2], [1, -1, 0.2], [-1, -1, 0.2],
-]
-
 function buildScene() {
   let seed = 7
   const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
@@ -95,7 +92,6 @@ export default function WireGraph({ className = '' }) {
     // The halftone sits on its own canvas behind the main one, so the browser composites
     // the two layers instead of copying one into the other.
     const screen = screenRef.current
-    const sctx = screen.getContext('2d')
     const size = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       W = canvas.clientWidth
@@ -105,65 +101,11 @@ export default function WireGraph({ className = '' }) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       screen.width = canvas.width
       screen.height = canvas.height
-      sctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
     const resize = new ResizeObserver(size)
     resize.observe(canvas)
     size()
 
-    // Halftone screen: points land in a coarse grid; each cell becomes one square
-    // sized by the density there.
-    let gw = 0
-    let gh = 0
-    const grids = {}
-    const resetGrids = () => {
-      gw = Math.ceil(W / CELL) + 1
-      gh = Math.ceil(H / CELL) + 1
-      for (const k of ['dust', 'incident', 'quote']) {
-        if (!grids[k] || grids[k].length !== gw * gh) grids[k] = new Float32Array(gw * gh)
-        else grids[k].fill(0)
-      }
-    }
-    // Bilinear: a point's weight is shared between the four cells around it by its exact
-    // position, so as it moves its dot fades from one cell into the next instead of jumping.
-    const splat = (grid, x, y, w) => {
-      const fx = x / CELL
-      const fy = y / CELL
-      const x0 = Math.floor(fx)
-      const y0 = Math.floor(fy)
-      const tx = fx - x0
-      const ty = fy - y0
-      const corners = [
-        [x0, y0, (1 - tx) * (1 - ty)], [x0 + 1, y0, tx * (1 - ty)],
-        [x0, y0 + 1, (1 - tx) * ty], [x0 + 1, y0 + 1, tx * ty],
-      ]
-      for (const [bx, by, bw] of corners) {
-        if (bw === 0) continue
-        for (const [dx, dy, k] of KERNEL) {
-          const gx = bx + dx
-          const gy = by + dy
-          if (gx >= 0 && gy >= 0 && gx < gw && gy < gh) grid[gy * gw + gx] += w * k * bw
-        }
-      }
-    }
-    const drawScreen = (g, grid, color, gain, alpha) => {
-      g.fillStyle = color
-      g.globalAlpha = alpha
-      g.beginPath()
-      for (let gy = 0; gy < gh; gy += 1) {
-        for (let gx = 0; gx < gw; gx += 1) {
-          const v = grid[gy * gw + gx]
-          if (v < 0.08) continue
-          // Sizes and positions snap to device pixels: on a 2x screen that is half a CSS
-          // pixel, so dots change size in finer steps than before without anti-aliasing.
-          const d = Math.min(CELL - 1, Math.max(1, Math.round(Math.sqrt(v * gain) * CELL * 0.5 * dpr) / dpr))
-          const o = Math.round((CELL * 0.5 - d / 2) * dpr) / dpr
-          g.rect(gx * CELL - CELL * 0.5 + o, gy * CELL - CELL * 0.5 + o, d, d)
-        }
-      }
-      g.fill()
-      g.globalAlpha = 1
-    }
     // A disc shaded with a halftone dot screen, heavier on the side away from the light.
     // Each colour and size is drawn once into a small sprite and reused every frame.
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -355,25 +297,24 @@ export default function WireGraph({ className = '' }) {
       el.style.top = `${y}px`
     }
 
-    const drawScreens = (focus) => {
-      resetGrids()
-      for (const p of dust) {
-        const [x, y, z] = project(p)
-        splat(grids.dust, x, y, Math.max(0.25, Math.min(1, 0.6 + z * 0.6)))
-      }
-      for (const n of nodes) {
-        const [, , z] = project(n.p)
-        const w = Math.max(0.3, Math.min(1, 0.7 + z * 0.55)) * (focus && focus !== n.id ? 0.4 : 1)
-        for (const g of n.grain) {
-          const [gx, gy] = project([n.p[0] + g[0], n.p[1] + g[1], n.p[2] + g[2]])
-          splat(grids[n.kind], gx, gy, w)
-        }
-      }
-      sctx.clearRect(0, 0, W, H)
-      drawScreen(sctx, grids.dust, DUST, 0.45, 0.4)
-      drawScreen(sctx, grids.incident, colors.incident, 0.5, 0.45)
-      drawScreen(sctx, grids.quote, colors.quote, 0.5, 0.35)
-    }
+    // Halftone dust and node grain, on the GPU (see halftoneGL.js).
+    const halftone = createHalftone(
+      screen,
+      [
+        ...dust.map((p) => ({ pos: p, center: p, kind: 0, node: -1 })),
+        ...nodes.flatMap((n, i) =>
+          n.grain.map((g) => ({
+            pos: [n.p[0] + g[0], n.p[1] + g[1], n.p[2] + g[2]],
+            center: n.p,
+            kind: n.kind === 'incident' ? 1 : 2,
+            node: i,
+          })),
+        ),
+      ],
+      { dust: [ink, 0.136], incident: [colors.incident, 0.45], quote: [ink, 0.35] },
+      CELL,
+    )
+    const nodeIndex = new Map(nodes.map((n, i) => [n.id, i]))
 
     const frame = (now) => {
       const focus = state.hover || state.pinned
@@ -382,9 +323,7 @@ export default function WireGraph({ className = '' }) {
       // Drift eases to a stop while a node is pointed at or dragged, and eases back after.
       const want = reduce || state.drag || focus ? 0 : 1
       state.speed += (want - state.speed) * (1 - Math.exp(-dt / 300))
-      // Same on-screen speed as the full-window artifact (graph scale 495px at 1440x900):
-      // a smaller graph turns proportionally faster so its nodes cover the same pixels.
-      state.yaw += dt * 0.00012 * (495 / Math.max(1, Math.min(W * 0.4, H * 0.44))) * state.speed
+      state.yaw += dt * DRIFT * state.speed
       ctx.clearRect(0, 0, W, H)
 
       cy = Math.cos(state.yaw)
@@ -392,7 +331,15 @@ export default function WireGraph({ className = '' }) {
       cp = Math.cos(state.pitch)
       sp = Math.sin(state.pitch)
 
-      drawScreens(focus)
+      halftone?.render({
+        W,
+        H,
+        dpr: canvas.width / Math.max(1, W),
+        rot: [cy, sy, cp, sp],
+        scale: Math.min(W * 0.4, H * 0.44),
+        cx: CX,
+        focus: focus ? nodeIndex.get(focus) : -1,
+      })
 
       shown = nodes.map((n) => {
         const [x, y, z, f] = project(n.p)
