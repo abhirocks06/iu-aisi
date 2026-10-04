@@ -210,11 +210,12 @@ function drawNetwork(canvas, root) {
     const [cx, cy] = pick()
     if (!clear(cx, cy)) continue
     placed += 1
-    const sigma = 12 + rand() * 24
-    for (let i = 0; i < 30 + rand() * 30; i += 1) {
+    // Wide, sparse clouds, as in the hero, so most squares print at 1-2px.
+    const sigma = 35 + rand() * 40
+    for (let i = 0; i < 30 + rand() * 20; i += 1) {
       const x = cx + gauss() * sigma
       const y = cy + gauss() * sigma
-      if (clear(x, y)) splat(dust, x, y, 0.5)
+      if (clear(x, y)) splat(dust, x, y, 0.4)
     }
   }
 
@@ -225,11 +226,12 @@ function drawNetwork(canvas, root) {
     for (let y = 0; y < gh; y += 1) {
       for (let x = 0; x < gw; x += 1) {
         const d = size(grid[y * gw + x], gain)
-        if (d) g.fillRect(x * CELL - d / 2, y * CELL - d / 2, d, d)
+        // Whole pixels, like the hero's screen, so squares stay crisp.
+        if (d) g.fillRect(x * CELL - (d >> 1), y * CELL - (d >> 1), d, d)
       }
     }
   }
-  screen(dust, crimson, 0.32, 0.6)
+  screen(dust, crimson, 0.45, 0.5)
   screen(red, crimson, 0.6, 0.5)
   g.globalAlpha = 1
 
