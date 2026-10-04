@@ -33,7 +33,7 @@ export default function Editorial() {
                 aria-selected={isActive}
                 onClick={() => setActive(filter)}
                 className={[
-                  'min-h-11 px-2 text-sm transition-colors sm:text-base',
+                  'min-h-11 px-2 text-base transition-colors',
                   isActive ? 'font-medium text-ink' : 'text-muted hover:text-ink',
                 ].join(' ')}
               >
@@ -64,10 +64,10 @@ export default function Editorial() {
                       </time>
                     </div>
                     <div className="min-w-0">
-                      <h2 className="text-lg font-[450] tracking-tight text-ink sm:text-xl">
+                      <h2 className="text-lg font-medium tracking-tight text-ink sm:text-xl">
                         {post.title}
                       </h2>
-                      <p className="mt-2 max-w-3xl text-[0.95rem] leading-relaxed text-ink-soft">
+                      <p className="mt-2 max-w-3xl text-base leading-relaxed text-ink-soft">
                         {post.excerpt}
                       </p>
                     </div>

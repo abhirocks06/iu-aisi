@@ -28,7 +28,7 @@ export default function EditorialPost() {
           ) : null}
           <h1
             className={[
-              'animate-rise text-4xl font-medium tracking-tight text-ink sm:text-[2.75rem]',
+              'animate-rise text-4xl font-medium tracking-tight text-ink sm:text-5xl',
               post.topics?.[0] ? 'mt-3' : '',
             ].join(' ')}
           >

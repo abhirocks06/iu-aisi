@@ -161,7 +161,7 @@ function ActivityCard({ item }) {
       ].join(' ')}
     >
       <h3 className="relative z-10 text-xl font-medium tracking-tight">{item.title}</h3>
-      <p className="relative z-10 mt-4 text-[0.95rem] leading-relaxed text-white/80">
+      <p className="relative z-10 mt-4 text-base leading-relaxed text-white/80">
         {item.copy}
       </p>
       <div

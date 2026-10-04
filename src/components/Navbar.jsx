@@ -185,7 +185,7 @@ export default function Navbar() {
               href={DISCORD_INVITE}
               target="_blank"
               rel="noreferrer"
-              className="btn-solid !px-3.5 !py-1.5 text-xs"
+              className="btn-solid !px-3.5 !py-1.5 !text-sm"
             >
               Get involved
             </a>
