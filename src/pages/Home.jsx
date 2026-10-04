@@ -67,7 +67,7 @@ export default function Home() {
 
       <section className="overflow-hidden bg-paper">
         <div className="mx-auto max-w-site px-5 py-20 sm:px-8 sm:py-28">
-          <h2 className="animate-rise font-display text-3xl leading-[1.15] tracking-tight text-ink sm:text-4xl">
+          <h2 className="font-display text-3xl leading-[1.15] tracking-tight text-ink sm:text-4xl">
             What We Do
           </h2>
           <div className="mt-12 sm:mt-16 lg:px-[4%]">

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 
 /*
  * "What We Do" drawn as a layer of a neural network, in the hero graph's halftone. On wide
@@ -9,8 +9,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
  *
  * Narrower screens get the same two levels as a tree: a line down the left, each activity
  * a large neuron heading its text, its topics branching off below.
- *
- * It draws itself in once when it comes into view.
  */
 
 const activities = [
@@ -47,17 +45,17 @@ function Tree({ topics }) {
     <div className="relative" style={{ height: topics.length * ROW }}>
       <svg className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
         {pts.map((p, i) => (
-          <path key={i} d={p.d} pathLength="1" className="wwd-branch" style={{ transitionDelay: `${900 + i * 120}ms` }} />
+          <path key={i} d={p.d} className="wwd-branch" />
         ))}
         {pts.map((p, i) => (
-          <circle key={`c${i}`} cx={p.x} cy={p.y} r="3.5" className="wwd-topic" style={{ transitionDelay: `${1150 + i * 120}ms` }} />
+          <circle key={`c${i}`} cx={p.x} cy={p.y} r="3.5" className="wwd-topic" />
         ))}
       </svg>
       {topics.map((t, i) => (
         <span
           key={t}
-          className="wwd-topic absolute -translate-y-1/2 text-sm leading-none whitespace-nowrap text-ink-soft"
-          style={{ left: pts[i].x + 10, top: pts[i].y, transitionDelay: `${1200 + i * 120}ms` }}
+          className="absolute -translate-y-1/2 text-sm leading-none whitespace-nowrap text-ink-soft"
+          style={{ left: pts[i].x + 10, top: pts[i].y }}
         >
           {t}
         </span>
@@ -67,25 +65,8 @@ function Tree({ topics }) {
 }
 
 export default function WhatWeDo() {
-  const ref = useRef(null)
-  const [on, setOn] = useState(false)
-
-  useEffect(() => {
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setOn(true)
-          io.disconnect()
-        }
-      },
-      { threshold: 0.3 },
-    )
-    io.observe(ref.current)
-    return () => io.disconnect()
-  }, [])
-
   return (
-    <div ref={ref} className={`wwd ${on ? 'wwd-on' : ''}`}>
+    <div>
       <Network />
       <ol className="relative grid gap-12 pl-8 lg:hidden">
         <span aria-hidden="true" className="wwd-line-v absolute top-4 bottom-4 left-[9.25px] w-[1.5px]" />
@@ -94,8 +75,7 @@ export default function WhatWeDo() {
             <h3 className="relative font-display text-[1.9rem] leading-[1.1] tracking-tight text-ink">
               <span
                 aria-hidden="true"
-                className="wwd-station absolute top-[0.3em] -left-[29.5px] h-3.5 w-3.5 rounded-full bg-crimson ring-4 ring-paper"
-                style={{ transitionDelay: `${300 + i * 180}ms` }}
+                className="absolute top-[0.3em] -left-[29.5px] h-3.5 w-3.5 rounded-full bg-crimson ring-4 ring-paper"
               />
               {a.title}
             </h3>
@@ -295,7 +275,7 @@ function Network() {
 
   return (
     <div ref={ref} className="relative hidden grid-cols-[14rem_minmax(6rem,11rem)_minmax(0,34rem)] lg:grid">
-      <canvas ref={canvasRef} className="wwd-reveal pointer-events-none absolute -top-32 -right-[22rem] -bottom-20 -left-[16rem] h-[calc(100%+13rem)] w-[calc(100%+38rem)]" aria-hidden="true" />
+      <canvas ref={canvasRef} className="pointer-events-none absolute -top-32 -right-[22rem] -bottom-20 -left-[16rem] h-[calc(100%+13rem)] w-[calc(100%+38rem)]" aria-hidden="true" />
 
       {/* Input layer: every topic, grouped by activity, spread over the layer's height. */}
       <ul className="flex flex-col justify-between py-2">
@@ -303,8 +283,7 @@ function Network() {
           a.topics.map((t, j) => (
             <li
               key={t}
-              className={`wwd-topic flex items-center justify-end gap-4 text-sm text-ink-soft ${j === 0 && i > 0 ? 'mt-5' : ''}`}
-              style={{ transitionDelay: `${300 + (i * 3 + j) * 60}ms` }}
+              className={`flex items-center justify-end gap-4 text-sm text-ink-soft ${j === 0 && i > 0 ? 'mt-5' : ''}`}
             >
               <span data-text>{t}</span>
               <span data-in={i} aria-hidden="true" className="h-2.5 w-2.5 shrink-0" />
