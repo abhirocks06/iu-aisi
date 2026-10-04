@@ -153,8 +153,22 @@ export default function Navbar() {
               }
             }}
           >
-            <span className="text-base font-medium tracking-[0.14em] text-ink uppercase">
-              AISI
+            {/* Letters are marked so the home headline can fold into them; the home page
+                hides the wordmark until then through --wordmark. */}
+            <span
+              className="text-base font-medium tracking-[0.14em] text-ink uppercase"
+              style={{ opacity: 'var(--wordmark, 1)' }}
+              aria-label="AISI @ IU"
+            >
+              {['A', 'I', 'S', 'I', ' ', '@', ' ', 'I', 'U'].map((ch, i, all) =>
+                ch === ' ' ? (
+                  ' '
+                ) : (
+                  <span key={i} data-mark={all.slice(0, i).filter((c) => c !== ' ').length} aria-hidden="true">
+                    {ch}
+                  </span>
+                ),
+              )}
             </span>
           </Link>
 
@@ -185,7 +199,7 @@ export default function Navbar() {
               href={DISCORD_INVITE}
               target="_blank"
               rel="noreferrer"
-              className="btn-solid !px-3.5 !py-1.5 text-xs"
+              className="btn-solid !px-3.5 !py-1.5 !text-sm"
             >
               Get involved
             </a>

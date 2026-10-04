@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import HeroVisual from '../components/HeroVisual'
+import HeroTitle from '../components/HeroTitle'
+import WireGraph from '../components/WireGraph'
 import JoinCTA from '../components/JoinCTA'
 import { DISCORD_INVITE } from '../data/posts'
 
@@ -154,12 +155,12 @@ function ActivityCard({ item }) {
   return (
     <li
       className={[
-        'relative flex min-h-[22rem] flex-col overflow-hidden p-6 text-white sm:min-h-[26rem] sm:p-7',
+        'relative flex min-h-[16rem] flex-col overflow-hidden p-6 text-white sm:min-h-[26rem] sm:p-7',
         item.tone,
       ].join(' ')}
     >
       <h3 className="relative z-10 text-xl font-medium tracking-tight">{item.title}</h3>
-      <p className="relative z-10 mt-4 text-[0.95rem] leading-relaxed text-white/80">
+      <p className="relative z-10 mt-4 text-base leading-relaxed text-white/80">
         {item.copy}
       </p>
       <div
@@ -175,12 +176,10 @@ function ActivityCard({ item }) {
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
-      <section className="bg-paper">
-        <div className="mx-auto grid max-w-site items-center gap-12 px-5 pt-16 pb-20 sm:px-8 sm:pt-20 sm:pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16 lg:pt-24 lg:pb-28">
-          <div className="animate-rise">
-            <h1 className="font-display text-[2.4rem] leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.35rem]">
-              AI Safety Initiative at&nbsp;IU&nbsp;Bloomington
-            </h1>
+      <section className="relative bg-paper">
+        <div className="mx-auto flex max-w-site items-center px-5 pt-16 pb-20 sm:px-8 sm:pt-20 sm:pb-24 lg:min-h-[min(46rem,calc(100svh-3.5rem))] lg:py-16">
+          <div className="animate-rise relative z-10 lg:max-w-[28rem]">
+            <HeroTitle className="font-display text-[2.4rem] leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.35rem]" />
             <p className="mt-6 max-w-md text-base leading-relaxed text-muted sm:text-lg">
               An interdisciplinary research community working to ensure advanced AI benefits
               humanity.
@@ -199,9 +198,16 @@ export default function Home() {
               </Link>
             </div>
           </div>
-
-          <HeroVisual className="animate-rise-delay mx-auto lg:mx-0 lg:justify-self-end" />
         </div>
+        {/* The graph fills the right of the hero out to the window edge and fades in toward
+            the headline. It needs the wide layout; phones get the text alone. */}
+        <WireGraph className="animate-rise-delay absolute inset-y-0 right-0 hidden w-[62%] lg:block" />
+        {/* A paper-coloured gradient over the graph's left edge; cheaper than masking an
+            animating canvas. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-[48%] hidden w-[14%] bg-gradient-to-r from-paper to-transparent lg:block"
+        />
       </section>
 
       <section className="bg-surface">

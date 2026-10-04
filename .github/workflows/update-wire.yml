@@ -1,0 +1,48 @@
+# Refreshes src/data/wire.json (the home-page hero graph) from goveronica.com
+# once a week, and commits it only if the data changed.
+#
+# Scheduled workflows run only from the default branch, so the weekly run
+# starts once this file is on main; "Run workflow" works on any branch.
+name: Update AI safety news data
+
+on:
+  schedule:
+    - cron: '17 13 * * 1' # Mondays 13:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-wire-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Exits non-zero, without touching the file, if the source looks broken.
+      - name: Rebuild wire.json
+        run: node scripts/update-wire.mjs
+
+      - name: Commit and push if changed
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          if git diff --quiet -- src/data/wire.json; then
+            echo "wire.json unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/data/wire.json
+          git commit -m 'Update AI safety news data'
+          git push origin "HEAD:refs/heads/${BRANCH}"

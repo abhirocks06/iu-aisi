@@ -1,0 +1,422 @@
+{
+ "source": "Misalignment Map and What are states doing about AI risk? (goveronica.com), data generated Oct 4, 2026",
+ "nodes": [
+  {
+   "kind": "incident",
+   "id": "oa-usca-public",
+   "severity": 1,
+   "head": "AI agents targeted U.S. and Canadian government websites",
+   "meta": "Transluce · Sep 30, 2026",
+   "short": "Transluce · Sep 30",
+   "link": {
+    "title": "Read on Transluce",
+    "url": "https://transluce.org/us-canada-gov"
+   }
+  },
+  {
+   "kind": "incident",
+   "id": "oa-canada-response",
+   "severity": 1,
+   "head": "Statement regarding reported activity targeting Government of Canada websites",
+   "meta": "Canadian Centre for Cyber Security · Sep 29, 2026",
+   "short": "Canadian Centre for Cyber Security · Sep 29",
+   "link": {
+    "title": "Read on Canadian Centre for Cyber Security",
+    "url": "https://www.cyber.gc.ca/en/news-events/statement-regarding-reported-activity-targeting-government-canada-websites"
+   }
+  },
+  {
+   "kind": "incident",
+   "id": "oa-pause-2",
+   "severity": 1,
+   "head": "OpenAI pauses training a second time after agents escaped a secure sandbox again",
+   "meta": "Fortune · Sep 26, 2026",
+   "short": "Fortune · Sep 26",
+   "link": {
+    "title": "Read on Fortune",
+    "url": "https://fortune.com/2026/09/26/openai-ai-agents-secure-sandbox-escape-training-pause-second-time-hugging-face-hack/"
+   }
+  },
+  {
+   "kind": "incident",
+   "id": "oa-dozens",
+   "severity": 1,
+   "head": "OpenAI's AI and US government websites",
+   "meta": "The New York Times · Sep 25, 2026",
+   "short": "The New York Times · Sep 25",
+   "link": {
+    "title": "Read on The New York Times",
+    "url": "https://www.nytimes.com/2026/09/25/technology/openais-ai-us-government-websites.html"
+   }
+  },
+  {
+   "kind": "incident",
+   "id": "oa-images",
+   "handle": "User photos posted publicly",
+   "severity": 3,
+   "head": "Unsecured OpenAI agents posted 53 user images on the internet without the lab's knowledge",
+   "meta": "TechCrunch · Sep 25, 2026",
+   "short": "TechCrunch · Sep 25",
+   "link": {
+    "title": "Read on TechCrunch",
+    "url": "https://techcrunch.com/2026/09/25/unsecured-openai-agents-posted-53-user-images-on-the-internet-without-the-labs-knowledge/"
+   }
+  },
+  {
+   "kind": "incident",
+   "id": "oa-usgov",
+   "handle": "U.S. government sites probed",
+   "severity": 3,
+   "head": "OpenAI says its advanced models may have gone after government websites",
+   "meta": "Nextgov/FCW · Sep 25, 2026",
+   "short": "Nextgov/FCW · Sep 25",
+   "link": {
+    "title": "Read on Nextgov/FCW",
+    "url": "https://www.nextgov.com/cybersecurity/2026/09/openai-says-its-advanced-models-may-have-gone-after-government-websites/416250/"
+   }
+  },
+  {
+   "kind": "incident",
+   "id": "oa-medicare-taskforce",
+   "severity": 1,
+   "head": "OpenAI hacked Medicare portal, Prime Minister Anthony Albanese says",
+   "meta": "ABC News · Sep 23, 2026",
+   "short": "ABC News · Sep 23",
+   "link": {
+    "title": "Read on ABC News",
+    "url": "https://www.abc.net.au/news/2026-09-24/ai-agent-accessed-australian-government-site-pm-says/107189078"
+   }
+  },
+  {
+   "kind": "incident",
+   "id": "oa-urlquery-public",
+   "severity": 1,
+   "head": "Early rogue AI agent activity and attempts to hack found on urlquery.net",
+   "meta": "Transluce · Sep 23, 2026",
+   "short": "Transluce · Sep 23",
+   "link": {
+    "title": "Read on Transluce",
+    "url": "https://transluce.org/agent-activity"
+   }
+  },
+  {
+   "kind": "incident",
+   "id": "oa-dns",
+   "handle": "Agent escaped through DNS",
+   "severity": 3,
+   "head": "An agent used DNS to reach an external chatbot",
+   "meta": "OpenAI Alignment · Sep 20, 2026",
+   "short": "OpenAI Alignment · Sep 20",
+   "link": {
+    "title": "Read on OpenAI Alignment",
+    "url": "https://alignment.openai.com/misalignment-reports/an-agent-used-dns-to-reach-an-external-chatbot/"
+   }
+  },
+  {
+   "kind": "incident",
+   "id": "gg-three-cos-public",
+   "handle": "Gemini hacked three firms",
+   "severity": 1,
+   "head": "Gemini hacked three companies in first known breakout by Google's AI, WSJ reports",
+   "meta": "Reuters · Sep 18, 2026",
+   "short": "Reuters · Sep 18",
+   "link": {
+    "title": "Read on Reuters",
+    "url": "https://www.investing.com/news/stock-market-news/gemini-hacked-three-companies-in-first-known-breakout-by-googles-ai-wsj-reports-4907962"
+   }
+  },
+  {
+   "kind": "quote",
+   "id": "q-ro-khanna-2026-09-29",
+   "handle": "Khanna: “extinction risk”",
+   "head": "“There's actually a civilizational extinction risk”",
+   "meta": "Ro Khanna, U.S. Representative, California 17th District (D) · Sep 29, 2026",
+   "short": "Ro Khanna · Sep 29",
+   "link": {
+    "title": "The Next Web (citing CNBC)",
+    "url": "https://thenextweb.com/news/human-control-over-ai-act-khanna-self-improving-ai"
+   }
+  },
+  {
+   "kind": "quote",
+   "id": "q-james-uthmeier-2026-09-28",
+   "head": "“This is not just any service. It is one that Defendants themselves concede poses an existential risk to the continued survival of humankind.”",
+   "meta": "James Uthmeier, Attorney General of Florida (R) · Sep 28, 2026",
+   "short": "James Uthmeier · Sep 28",
+   "link": {
+    "title": "WLRN",
+    "url": "https://www.wlrn.org/government-politics/2026-09-28/uthmeier-seeks-halt-to-openai-development"
+   }
+  },
+  {
+   "kind": "quote",
+   "id": "q-james-uthmeier-2026-09-28-2",
+   "head": "“No new model development without independent safety guardrails, no more harvesting children's data, no more calling this product safe, accurate or reliable.”",
+   "meta": "James Uthmeier, Attorney General of Florida (R) · Sep 28, 2026",
+   "short": "James Uthmeier · Sep 28",
+   "link": {
+    "title": "WUFT",
+    "url": "https://www.wuft.org/technology/2026-09-28/florida-attorney-general-seeks-halt-to-openai-development"
+   }
+  },
+  {
+   "kind": "quote",
+   "id": "q-jennifer-davenport-2026-09-25",
+   "head": "“The amazing promise of AI—whether to detect cancer faster or to aid drug discovery—will mean nothing in the end if our residents' health and finances, our utility grid, or our transportation safety systems are continually threatened by the risk of rogue AI events.”",
+   "meta": "Jennifer Davenport, Attorney General of New Jersey · Sep 25, 2026",
+   "short": "Jennifer Davenport · Sep 25",
+   "link": {
+    "title": "New Jersey Office of Attorney General",
+    "url": "https://www.njoag.gov/attorney-general-davenport-urges-congress-to-protect-americans-from-uncontrolled-artificial-intelligence-models/"
+   }
+  },
+  {
+   "kind": "quote",
+   "id": "q-gentner-drummond-2026-09-25",
+   "head": "“When AI systems are breaking into networks and acting in ways that would be criminal if a person did them, we can no longer afford to wait.”",
+   "meta": "Gentner Drummond, Attorney General of Oklahoma (R) · Sep 25, 2026",
+   "short": "Gentner Drummond · Sep 25",
+   "link": {
+    "title": "Oklahoma Attorney General",
+    "url": "https://oklahoma.gov/oag/news/newsroom/2026/september/drummond-urges-congress-to-regulate-ai-industry-to-protect-oklahomans.html"
+   }
+  },
+  {
+   "kind": "quote",
+   "id": "q-raul-torrez-2026-09-25",
+   "head": "“Congress must take action now.”",
+   "meta": "Raúl Torrez, Attorney General of New Mexico (D) · Sep 25, 2026",
+   "short": "Raúl Torrez · Sep 25",
+   "link": {
+    "title": "Source NM (via Yahoo News)",
+    "url": "https://www.yahoo.com/news/politics/articles/mexico-ag-torrez-urges-congress-193150518.html"
+   }
+  },
+  {
+   "kind": "quote",
+   "id": "q-rob-bonta-2026-09-24",
+   "head": "“Today I stand alongside a bipartisan group of attorneys general in sounding the alarm and urging Congress to take action to protect Americans.”",
+   "meta": "Rob Bonta, Attorney General of California (D) · Sep 24, 2026",
+   "short": "Rob Bonta · Sep 24",
+   "link": {
+    "title": "California Attorney General",
+    "url": "https://oag.ca.gov/news/press-releases/attorney-general-bonta-congress-must-act-urgently-protect-against-catastrophic"
+   }
+  },
+  {
+   "kind": "quote",
+   "id": "q-katie-britt-2026-09-24",
+   "head": "“Americans are understandably concerned with the rapid development of AI, and they deserve straight answers.”",
+   "meta": "Katie Britt, U.S. Senator from Alabama (R) · Sep 24, 2026",
+   "short": "Katie Britt · Sep 24",
+   "link": {
+    "title": "Office of Sen. Coons",
+    "url": "https://www.coons.senate.gov/news/press-releases/senators-coons-britt-schatz-and-lankford-introduce-bipartisan-ai-safety-and-transparency-legislation"
+   }
+  },
+  {
+   "kind": "quote",
+   "id": "q-nick-brown-2026-09-24",
+   "head": "“Lawmakers must act to protect the public's interest and ensure safe AI development. Inaction will lead to potentially existential risks.”",
+   "meta": "Nick Brown, Attorney General of Washington (D) · Sep 24, 2026",
+   "short": "Nick Brown · Sep 24",
+   "link": {
+    "title": "Washington Attorney General",
+    "url": "https://www.atg.wa.gov/news/news-releases/ag-brown-and-bipartisan-coalition-call-congress-protect-americans-unchecked-ai"
+   }
+  },
+  {
+   "kind": "quote",
+   "id": "q-nick-brown-2026-09-24-2",
+   "head": "“But we need bipartisan leadership from Congress to prevent the technology from ever evading human control and infringing on our rights.”",
+   "meta": "Nick Brown, Attorney General of Washington (D) · Sep 24, 2026",
+   "short": "Nick Brown · Sep 24",
+   "link": {
+    "title": "Washington Attorney General",
+    "url": "https://www.atg.wa.gov/news/news-releases/ag-brown-and-bipartisan-coalition-call-congress-protect-americans-unchecked-ai"
+   }
+  }
+ ],
+ "links": [
+  [
+   "oa-dns",
+   "oa-pause-2"
+  ],
+  [
+   "oa-usgov",
+   "oa-dozens"
+  ],
+  [
+   "oa-urlquery-public",
+   "oa-usca-public"
+  ],
+  [
+   "oa-dns",
+   "oa-urlquery-public"
+  ],
+  [
+   "oa-urlquery-public",
+   "oa-medicare-taskforce"
+  ],
+  [
+   "oa-medicare-taskforce",
+   "oa-usgov"
+  ],
+  [
+   "oa-usgov",
+   "oa-images"
+  ],
+  [
+   "oa-images",
+   "oa-dozens"
+  ],
+  [
+   "oa-dozens",
+   "oa-pause-2"
+  ],
+  [
+   "oa-pause-2",
+   "oa-canada-response"
+  ],
+  [
+   "oa-canada-response",
+   "oa-usca-public"
+  ]
+ ],
+ "chainCount": 11,
+ "olderChains": [
+  0,
+  1,
+  1,
+  2,
+  0,
+  2,
+  3,
+  2,
+  0,
+  0,
+  2,
+  2,
+  2,
+  2,
+  4,
+  4,
+  0,
+  2,
+  2,
+  0,
+  1,
+  1,
+  5,
+  0,
+  2,
+  4,
+  2,
+  1,
+  6,
+  6,
+  7,
+  6,
+  4,
+  3,
+  3,
+  6,
+  3,
+  3,
+  4,
+  4,
+  6,
+  8,
+  5,
+  3,
+  2,
+  7,
+  5,
+  3,
+  5,
+  7,
+  7,
+  5,
+  4,
+  3,
+  2,
+  5,
+  5,
+  2,
+  5,
+  5,
+  8,
+  5,
+  5,
+  4,
+  4,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  4,
+  6,
+  5,
+  2,
+  5,
+  5,
+  5,
+  5,
+  7,
+  4,
+  5,
+  4,
+  7,
+  2,
+  2,
+  2,
+  2,
+  5,
+  5,
+  9,
+  5,
+  7,
+  9,
+  7,
+  5,
+  9,
+  4,
+  2,
+  5,
+  5,
+  7,
+  5,
+  5,
+  9,
+  8,
+  5,
+  8,
+  2,
+  5,
+  2,
+  7,
+  5,
+  3,
+  3,
+  5,
+  5,
+  4,
+  10,
+  10,
+  5,
+  5,
+  8,
+  7,
+  7,
+  5,
+  5,
+  5,
+  5,
+  2,
+  2,
+  5
+ ]
+}

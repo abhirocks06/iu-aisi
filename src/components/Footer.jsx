@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
+import { LinkedInIcon } from './icons'
 import { BEINVOLVED_URL, DISCORD_INVITE, INSTAGRAM_URL } from '../data/posts'
 
 const navLinks = [
@@ -45,11 +46,7 @@ const socialLinks = [
   {
     label: 'LinkedIn',
     href: 'https://www.linkedin.com/company/143631076',
-    icon: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
-        <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.23 0z" />
-      </svg>
-    ),
+    icon: <LinkedInIcon />,
   },
   {
     label: 'Instagram',
@@ -67,10 +64,10 @@ export default function Footer() {
 
   return (
     <footer className="bg-paper">
-      <div className="mx-auto grid max-w-site grid-cols-1 items-center gap-6 px-5 py-10 text-center sm:px-8 lg:grid-cols-3 lg:gap-4 lg:text-left">
+      <div className="mx-auto grid max-w-site grid-cols-1 items-center gap-2 px-5 py-8 text-center sm:px-8 lg:grid-cols-3 lg:gap-4 lg:text-left">
         <Link
           to="/"
-          className="select-none justify-self-center no-underline lg:justify-self-start"
+          className="inline-flex min-h-11 items-center select-none justify-self-center no-underline lg:justify-self-start"
           onClick={(event) => {
             if (pathname === '/') {
               event.preventDefault()
@@ -84,7 +81,7 @@ export default function Footer() {
         </Link>
 
         <nav
-          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-normal tracking-wide text-ink-soft lg:flex-nowrap"
+          className="flex flex-wrap items-center justify-center gap-x-2 text-sm font-normal tracking-wide text-ink-soft lg:flex-nowrap"
           aria-label="Footer"
         >
           {navLinks.map((link) =>
@@ -94,7 +91,7 @@ export default function Footer() {
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
-                className="no-underline transition-colors hover:text-ink"
+                className="inline-flex min-h-11 items-center px-2 no-underline transition-colors hover:text-ink"
               >
                 {link.label}
               </a>
@@ -102,7 +99,7 @@ export default function Footer() {
               <Link
                 key={link.to}
                 to={link.to}
-                className="no-underline transition-colors hover:text-ink"
+                className="inline-flex min-h-11 items-center px-2 no-underline transition-colors hover:text-ink"
               >
                 {link.label}
               </Link>
@@ -111,7 +108,7 @@ export default function Footer() {
         </nav>
 
         <nav
-          className="flex shrink-0 items-center justify-center gap-0.5 justify-self-center lg:justify-self-end lg:gap-3"
+          className="flex shrink-0 items-center justify-center justify-self-center lg:-mr-3 lg:justify-self-end"
           aria-label="Social"
         >
           {socialLinks.map((link) => (
@@ -121,7 +118,7 @@ export default function Footer() {
               target="_blank"
               rel="noreferrer"
               aria-label={link.label}
-              className="inline-flex h-9 w-8 items-center justify-center text-muted transition-colors hover:text-ink lg:h-auto lg:w-auto"
+              className="inline-flex h-11 w-11 items-center justify-center text-muted transition-colors hover:text-ink"
             >
               {link.icon}
             </a>
