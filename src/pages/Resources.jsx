@@ -11,9 +11,9 @@ function ResourceLink({ item }) {
       {...(item.href
         ? { target: '_blank', rel: 'noreferrer' }
         : { onClick: (event) => event.preventDefault() })}
-      className="group block no-underline transition-opacity hover:opacity-70"
+      className="inline-block no-underline transition-opacity hover:opacity-70"
     >
-      <span className="text-base font-normal tracking-tight text-ink group-hover:underline group-hover:underline-offset-4">
+      <span className="text-base font-normal tracking-tight text-ink hover:underline hover:underline-offset-4">
         {item.title}
       </span>
       {item.description ? (
