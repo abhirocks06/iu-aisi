@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
  * "What We Do" drawn as a layer of a neural network, in the hero graph's halftone. On wide
  * screens the topics are the input layer (small open neurons) and the three activities
  * the next layer (halftone neurons, each heading its text). Like a dense layer every input
- * connects to every activity: its own by a dense crimson stream, the others by faint dust.
+ * connects to every activity: its own by a crimson curve, the others by grey hairlines.
  * All weights sit in the gap between the layers, so none crosses text.
  *
  * Narrower screens get the same two levels as a tree: a line down the left, each activity
@@ -111,9 +111,8 @@ export default function WhatWeDo() {
 }
 
 // Wide screens: topics (inputs) on the left, activities on the right, weights between,
-// drawn once onto a canvas in the hero graph's halftone: each weight is a bowed stream of
-// printed squares (dense crimson for an activity's own topics, a faint ink dust for the
-// rest), and each activity a halftone-shaded neuron in a cloud of grain.
+// drawn once onto a canvas: each weight a bowed curve (crimson to an activity's own topics,
+// a grey hairline to the rest), and, in the hero graph's halftone, each activity a halftone-shaded neuron in a cloud of grain.
 const CELL = 5
 const KERNEL = [
   [0, 0, 1], [1, 0, 0.45], [-1, 0, 0.45], [0, 1, 0.45], [0, -1, 0.45],
@@ -150,7 +149,6 @@ function drawNetwork(canvas, root) {
   const gw = Math.ceil(W / CELL) + 1
   const gh = Math.ceil(H / CELL) + 1
   const red = new Float32Array(gw * gh)
-  const ink = new Float32Array(gw * gh)
   const splat = (grid, x, y, w) => {
     const cx = Math.round(x / CELL)
     const cy = Math.round(y / CELL)
@@ -160,28 +158,24 @@ function drawNetwork(canvas, root) {
       if (gx >= 0 && gy >= 0 && gx < gw && gy < gh) grid[gy * gw + gx] += w * k
     }
   }
-  // A weight bows like a sigmoid: it leaves and arrives level.
-  const along = (a, b, t) => {
+  // Weights bow like a sigmoid, leaving and arriving level: grey hairlines to the other
+  // activities first, then crimson to each topic's own.
+  const weight = (a, b) => {
     const dx = (b.x - a.x) * 0.55
-    const u = 1 - t
-    return {
-      x: u * u * u * a.x + 3 * u * u * t * (a.x + dx) + 3 * u * t * t * (b.x - dx) + t * t * t * b.x,
-      y: u * u * u * a.y + 3 * u * u * t * a.y + 3 * u * t * t * b.y + t * t * t * b.y,
-    }
+    g.beginPath()
+    g.moveTo(a.x, a.y)
+    g.bezierCurveTo(a.x + dx, a.y, b.x - dx, b.y, b.x, b.y)
+    g.stroke()
   }
-  for (const a of ins) {
-    outs.forEach((b, j) => {
-      const own = a.k === j
-      const n = own ? 110 : 34
-      for (let i = 0; i < n; i += 1) {
-        const t = rand()
-        const p = along(a, b, t)
-        // Own weights swell mid-way like a printed stroke; the others stay a thin dust.
-        const spread = own ? 0.6 + 1.8 * Math.sin(Math.PI * t) : 1.4
-        splat(own ? red : ink, p.x + gauss() * spread, p.y + gauss() * spread, own ? 0.32 : 0.3)
-      }
-    })
-  }
+  g.lineWidth = 1
+  g.strokeStyle = '#171717'
+  g.globalAlpha = 0.12
+  for (const a of ins) outs.forEach((b, j) => a.k !== j && weight(a, b))
+  g.strokeStyle = crimson
+  g.globalAlpha = 0.8
+  g.lineWidth = 1.25
+  for (const a of ins) weight(a, outs[a.k])
+  g.globalAlpha = 1
   for (const b of outs) {
     for (let i = 0; i < 110; i += 1) splat(red, b.x + gauss() * 10, b.y + gauss() * 10, 0.3)
   }
@@ -197,7 +191,6 @@ function drawNetwork(canvas, root) {
       }
     }
   }
-  screen(ink, '#171717', 0.22, 0.6)
   screen(red, crimson, 0.6, 0.5)
   g.globalAlpha = 1
 
