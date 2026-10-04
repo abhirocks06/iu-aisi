@@ -24,62 +24,75 @@ const activities = [
   },
 ]
 
-/** Polished bottom graphics — Goodfire-style soft forms with edge fade. */
+/** Polished bottom graphics — same motifs, tighter geometry and fades. */
 function CardArt({ kind }) {
   if (kind === 'discussion') {
+    // Even ribbon family — shared curve, stepped offset (reads as conversation flow)
+    const ribbons = [0, 1, 2, 3, 4, 5]
     return (
       <svg viewBox="0 0 320 180" className="h-full w-full" aria-hidden="true">
         <defs>
           <linearGradient id="art-d-fade" x1="160" y1="0" x2="160" y2="180" gradientUnits="userSpaceOnUse">
             <stop stopColor="white" stopOpacity="0" />
-            <stop offset="0.35" stopColor="white" stopOpacity="1" />
+            <stop offset="0.4" stopColor="white" stopOpacity="1" />
             <stop offset="1" stopColor="white" stopOpacity="1" />
           </linearGradient>
           <mask id="art-d-mask">
             <rect width="320" height="180" fill="url(#art-d-fade)" />
           </mask>
-          <linearGradient id="art-d-stroke" x1="40" y1="40" x2="300" y2="160" gradientUnits="userSpaceOnUse">
-            <stop stopColor="white" stopOpacity="0.5" />
+          <linearGradient id="art-d-stroke" x1="0" y1="90" x2="320" y2="90" gradientUnits="userSpaceOnUse">
+            <stop stopColor="white" stopOpacity="0.08" />
+            <stop offset="0.35" stopColor="white" stopOpacity="0.55" />
+            <stop offset="0.65" stopColor="white" stopOpacity="0.55" />
             <stop offset="1" stopColor="white" stopOpacity="0.08" />
           </linearGradient>
         </defs>
-        <g mask="url(#art-d-mask)">
-          {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-            <path
-              key={i}
-              d={`M-10 ${120 + i * 8}C40 ${70 + i * 6} 100 ${48 + i * 4} 160 ${52 + i * 3}C220 ${56 + i * 3} 270 ${78 + i * 5} 340 ${68 + i * 4}`}
-              fill="none"
-              stroke="url(#art-d-stroke)"
-              strokeWidth={1.05 - i * 0.06}
-              strokeOpacity={0.85 - i * 0.08}
-            />
-          ))}
-          <ellipse cx="150" cy="130" rx="78" ry="42" fill="white" fillOpacity="0.06" />
-          <ellipse cx="210" cy="138" rx="64" ry="36" fill="white" fillOpacity="0.09" />
+        <g mask="url(#art-d-mask)" fill="none" strokeLinecap="round">
+          <ellipse cx="168" cy="132" rx="96" ry="48" fill="white" fillOpacity="0.05" stroke="none" />
+          {ribbons.map((i) => {
+            const y = i * 9
+            return (
+              <path
+                key={i}
+                d={`M-16 ${108 + y} C48 ${58 + y * 0.55} 112 ${44 + y * 0.35} 160 ${48 + y * 0.3} C208 ${52 + y * 0.3} 264 ${72 + y * 0.45} 336 ${64 + y * 0.4}`}
+                stroke="url(#art-d-stroke)"
+                strokeWidth={1.35}
+                strokeOpacity={0.95 - i * 0.1}
+              />
+            )
+          })}
         </g>
       </svg>
     )
   }
 
   if (kind === 'research') {
-    const cols = 10
-    const rows = 6
+    // Soft heatmap lattice — even cells, smooth gaussian falloff
+    const cols = 11
+    const rows = 7
+    const cellW = 16
+    const cellH = 11
+    const gapX = 10
+    const gapY = 8
+    const originX = (320 - cols * cellW - (cols - 1) * gapX) / 2
+    const originY = 38
     const cells = []
     for (let r = 0; r < rows; r += 1) {
       for (let c = 0; c < cols; c += 1) {
-        const ridge = Math.exp(-(((c - 5.5) / 4) ** 2 + ((r - 2.5) / 2.4) ** 2))
-        const t = Math.min(1, ridge * 0.85 + (((r * 3 + c * 5) % 7) / 7) * 0.25)
-        if (t < 0.12) continue
+        const dx = (c - (cols - 1) / 2) / 3.6
+        const dy = (r - (rows - 1) / 2) / 2.4
+        const t = Math.exp(-(dx * dx + dy * dy))
+        if (t < 0.08) continue
         cells.push(
           <rect
             key={`${r}-${c}`}
-            x={28 + c * 27}
-            y={42 + r * 20}
-            width="18"
-            height="12"
-            rx="1"
+            x={originX + c * (cellW + gapX)}
+            y={originY + r * (cellH + gapY)}
+            width={cellW}
+            height={cellH}
+            rx="2"
             fill="white"
-            fillOpacity={0.05 + t * 0.32}
+            fillOpacity={0.04 + t * 0.38}
           />,
         )
       }
@@ -87,9 +100,9 @@ function CardArt({ kind }) {
     return (
       <svg viewBox="0 0 320 180" className="h-full w-full" aria-hidden="true">
         <defs>
-          <radialGradient id="art-r-fade" cx="50%" cy="55%" r="58%">
+          <radialGradient id="art-r-fade" cx="50%" cy="58%" r="62%">
             <stop offset="0%" stopColor="white" stopOpacity="1" />
-            <stop offset="55%" stopColor="white" stopOpacity="0.85" />
+            <stop offset="60%" stopColor="white" stopOpacity="0.9" />
             <stop offset="100%" stopColor="white" stopOpacity="0" />
           </radialGradient>
           <mask id="art-r-mask">
@@ -101,52 +114,37 @@ function CardArt({ kind }) {
     )
   }
 
+  // Perfect concentric arcs — amphitheater / gathering
+  const radii = [28, 48, 68, 88, 108, 128]
   return (
     <svg viewBox="0 0 320 180" className="h-full w-full" aria-hidden="true">
       <defs>
-        <linearGradient id="art-e-fade" x1="160" y1="20" x2="160" y2="170" gradientUnits="userSpaceOnUse">
+        <linearGradient id="art-e-fade" x1="160" y1="10" x2="160" y2="180" gradientUnits="userSpaceOnUse">
           <stop stopColor="white" stopOpacity="0" />
-          <stop offset="0.4" stopColor="white" stopOpacity="1" />
+          <stop offset="0.42" stopColor="white" stopOpacity="1" />
           <stop offset="1" stopColor="white" stopOpacity="1" />
         </linearGradient>
         <mask id="art-e-mask">
           <rect width="320" height="180" fill="url(#art-e-fade)" />
         </mask>
-        <linearGradient id="art-e-stroke" x1="160" y1="40" x2="160" y2="160" gradientUnits="userSpaceOnUse">
-          <stop stopColor="white" stopOpacity="0.45" />
-          <stop offset="1" stopColor="white" stopOpacity="0.08" />
+        <linearGradient id="art-e-stroke" x1="160" y1="40" x2="160" y2="168" gradientUnits="userSpaceOnUse">
+          <stop stopColor="white" stopOpacity="0.5" />
+          <stop offset="1" stopColor="white" stopOpacity="0.1" />
         </linearGradient>
       </defs>
-      <g mask="url(#art-e-mask)">
-        <path
-          d="M36 156c30-52 68-78 124-78s94 26 124 78"
-          fill="none"
-          stroke="url(#art-e-stroke)"
-          strokeWidth="1.15"
-        />
-        <path
-          d="M62 156c24-38 54-58 98-58s74 20 98 58"
-          fill="none"
-          stroke="white"
-          strokeOpacity="0.22"
-          strokeWidth="1"
-        />
-        <path
-          d="M90 156c18-26 40-40 70-40s52 14 70 40"
-          fill="none"
-          stroke="white"
-          strokeOpacity="0.14"
-          strokeWidth="1"
-        />
-        <path
-          d="M118 156c12-16 26-24 42-24s30 8 42 24"
-          fill="white"
-          fillOpacity="0.06"
-          stroke="white"
-          strokeOpacity="0.12"
-          strokeWidth="1"
-        />
-        <path d="M28 156h264" stroke="white" strokeOpacity="0.14" strokeWidth="1" />
+      <g mask="url(#art-e-mask)" fill="none" strokeLinecap="round">
+        <path d="M40 168h240" stroke="white" strokeOpacity="0.16" strokeWidth="1.25" />
+        {radii.map((r, i) => (
+          <path
+            key={r}
+            d={`M${160 - r} 168 A${r} ${r} 0 0 1 ${160 + r} 168`}
+            stroke={i === 0 ? 'url(#art-e-stroke)' : 'white'}
+            strokeOpacity={i === 0 ? 1 : 0.42 - i * 0.05}
+            strokeWidth="1.35"
+            fill={i === 0 ? 'white' : 'none'}
+            fillOpacity={i === 0 ? 0.07 : 0}
+          />
+        ))}
       </g>
     </svg>
   )
@@ -221,7 +219,7 @@ export default function Home() {
               time.
             </p>
             <p>
-              We’re a community of students and faculty at Indiana University working
+              We’re a community of students at Indiana University working
               to reduce catastrophic risks from advanced AI. We study how these models behave,
               along with the ethical, economic, and geopolitical implications of deploying them.
             </p>
