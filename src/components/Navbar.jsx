@@ -154,7 +154,7 @@ export default function Navbar() {
             }}
           >
             <span className="text-base font-medium tracking-[0.14em] text-ink uppercase">
-              AISI
+              AISI @ IU
             </span>
           </Link>
 
