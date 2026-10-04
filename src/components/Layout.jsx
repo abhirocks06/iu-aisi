@@ -8,7 +8,7 @@ const PAGE_TITLES = {
   '/': 'Home',
   '/events': 'Events',
   '/editorial': 'Editorial',
-  '/resources': 'Resources',
+  '/what-is-ai-safety': 'What is AI Safety',
   '/team': 'Team',
 }
 

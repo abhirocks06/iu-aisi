@@ -3,8 +3,8 @@ import { LinkedInIcon } from './icons'
 import { BEINVOLVED_URL, DISCORD_INVITE, INSTAGRAM_URL } from '../data/posts'
 
 const navLinks = [
+  { to: '/what-is-ai-safety', label: 'What is AI Safety' },
   { to: '/events', label: 'Events' },
-  { to: '/resources', label: 'Resources' },
   { to: '/team', label: 'Team' },
 ]
 
