@@ -20,14 +20,16 @@ const PARTS = [
   ['I', 5], ['U', 6], [' ', null], ['Bloomington', null],
 ]
 
-const DURATION = 860
-const STAGGER = 20
+const DURATION = 1300
+const STAGGER = 40
 // Each axis gets its own curve so the letters' paths don't cross. On the way up every
 // letter slides sideways early, and letters from lower lines rise into the nav row last,
 // once the first-line letters (the far-travelling "at" above all) have passed over them.
 // Going back, each retraces its arc.
-const FIRST = 'cubic-bezier(0.16, 1, 0.3, 1)'
-const LATER = 'cubic-bezier(0.7, 0, 0.2, 1)'
+// Soft in and out, the curve the Yale AIA nav uses, rather than a snappy expo.
+const FIRST = 'cubic-bezier(0.37, 0.16, 0.3, 1)'
+const LATER = 'cubic-bezier(0.75, 0, 0.35, 1)'
+const RISE_LAG = 200
 const FADE_OUT = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
 
 export default function HeroTitle({ className }) {
@@ -183,7 +185,7 @@ export default function HeroTitle({ className }) {
         const firstLine = lineOf[i] === 0
         // The typeface changes over the middle of the flight: the old face mostly leaves
         // before the new one arrives, so the two never sit fully on top of each other.
-        const swap = (start) => ({ duration: DURATION * 0.32, delay: delay + DURATION * start, fill: 'both', easing: 'linear' })
+        const swap = (start) => ({ duration: DURATION * 0.4, delay: delay + DURATION * start, fill: 'both', easing: 'linear' })
         const [inFace, outFace] = toNav ? ['sans', 'serif'] : ['serif', 'sans']
         f.anims = [
           f.x.animate(
@@ -192,7 +194,10 @@ export default function HeroTitle({ className }) {
           ),
           f.y.animate(
             [{ transform: `translateY(${from.y - to.y}px)` }, { transform: 'translateY(0px)' }],
-            { ...timing, easing: firstLine === toNav ? FIRST : LATER },
+            // Lower lines rise a beat later, after the first line has slid past above them.
+            firstLine === toNav
+              ? { ...timing, easing: FIRST }
+              : { ...timing, delay: delay + (toNav ? RISE_LAG : 0), easing: LATER },
           ),
           // Letters shrink early on the way up (before any can crowd its neighbour) and
           // grow late on the way back.
@@ -200,8 +205,8 @@ export default function HeroTitle({ className }) {
             [{ transform: `scale(${from.s})` }, { transform: `scale(${to.s})` }],
             { ...timing, easing: toNav ? FIRST : LATER },
           ),
-          f[outFace].animate([{ opacity: from[outFace] }, { opacity: 0 }], swap(0.16)),
-          f[inFace].animate([{ opacity: from[inFace] }, { opacity: 1 }], swap(0.3)),
+          f[outFace].animate([{ opacity: from[outFace] }, { opacity: 0 }], swap(0.18)),
+          f[inFace].animate([{ opacity: from[inFace] }, { opacity: 1 }], swap(0.32)),
         ]
       })
 
@@ -211,13 +216,12 @@ export default function HeroTitle({ className }) {
         el.animate(
           [{ opacity: leftNow[i] }, { opacity: toNav ? 0 : 1 }],
           toNav
-            ? { duration: 220, easing: FADE_OUT, fill: 'forwards' }
-            : { duration: 380, delay: DURATION * 0.55, easing: 'ease-out', fill: 'forwards' },
+            ? { duration: 450, easing: FADE_OUT, fill: 'forwards' }
+            : { duration: 500, delay: DURATION * 0.55, easing: 'ease-out', fill: 'forwards' },
         ),
       )
 
-      const last = fliers.reduce((a, f, i) => (rank.get(i) > rank.get(a) ? i : a), 0)
-      fliers[last].anims[1].finished
+      Promise.all(fliers.flatMap((f) => f.anims.map((a) => a.finished)))
         .then(() => {
           if (id !== flight) return
           live = false
