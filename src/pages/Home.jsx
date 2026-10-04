@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import HeroTitle from '../components/HeroTitle'
 import WireGraph from '../components/WireGraph'
 import JoinCTA from '../components/JoinCTA'
 import { DISCORD_INVITE } from '../data/posts'
@@ -177,12 +178,10 @@ function ActivityCard({ item }) {
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
-      <section className="relative overflow-hidden bg-paper">
+      <section className="relative bg-paper">
         <div className="mx-auto flex max-w-site items-center px-5 pt-16 pb-20 sm:px-8 sm:pt-20 sm:pb-24 lg:min-h-[min(46rem,calc(100svh-3.5rem))] lg:py-16">
           <div className="animate-rise relative z-10 lg:max-w-[28rem]">
-            <h1 className="font-display text-[2.4rem] leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.35rem]">
-              AI Safety Initiative at&nbsp;IU&nbsp;Bloomington
-            </h1>
+            <HeroTitle className="font-display text-[2.4rem] leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.35rem]" />
             <p className="mt-6 max-w-md text-base leading-relaxed text-muted sm:text-lg">
               An interdisciplinary research community working to ensure advanced AI benefits
               humanity.

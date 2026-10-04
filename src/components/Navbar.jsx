@@ -153,8 +153,22 @@ export default function Navbar() {
               }
             }}
           >
-            <span className="text-base font-medium tracking-[0.14em] text-ink uppercase">
-              AISI @ IU
+            {/* Letters are marked so the home headline can fold into them; the home page
+                hides the wordmark until then through --wordmark. */}
+            <span
+              className="text-base font-medium tracking-[0.14em] text-ink uppercase"
+              style={{ opacity: 'var(--wordmark, 1)' }}
+              aria-label="AISI @ IU"
+            >
+              {['A', 'I', 'S', 'I', ' ', '@', ' ', 'I', 'U'].map((ch, i, all) =>
+                ch === ' ' ? (
+                  ' '
+                ) : (
+                  <span key={i} data-mark={all.slice(0, i).filter((c) => c !== ' ').length} aria-hidden="true">
+                    {ch}
+                  </span>
+                ),
+              )}
             </span>
           </Link>
 
