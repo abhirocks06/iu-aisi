@@ -1,11 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 /*
- * "What We Do" drawn as a layer of a neural network. On wide screens the topics are the
- * input layer (small hollow neurons) and the three activities the next layer (large
- * neurons, each heading its text). Like a dense layer every input connects to every
- * activity: its own activity by a strong crimson weight, the others by faint ones. All
- * edges sit in the gap between the layers, so none crosses text.
+ * "What We Do" drawn as a layer of a neural network, in the hero graph's halftone. On wide
+ * screens the topics are the input layer (small open neurons) and the three activities
+ * the next layer (halftone neurons, each heading its text). Like a dense layer every input
+ * connects to every activity: its own by a dense crimson stream, the others by faint dust.
+ * All weights sit in the gap between the layers, so none crosses text.
  *
  * Narrower screens get the same two levels as a tree: a line down the left, each activity
  * a large neuron heading its text, its topics branching off below.
@@ -110,61 +110,158 @@ export default function WhatWeDo() {
   )
 }
 
-// Wide screens: topics (inputs) on the left, activities on the right, weights between.
+// Wide screens: topics (inputs) on the left, activities on the right, weights between,
+// drawn once onto a canvas in the hero graph's halftone: each weight is a bowed stream of
+// printed squares (dense crimson for an activity's own topics, a faint ink dust for the
+// rest), and each activity a halftone-shaded neuron in a cloud of grain.
+const CELL = 5
+const KERNEL = [
+  [0, 0, 1], [1, 0, 0.45], [-1, 0, 0.45], [0, 1, 0.45], [0, -1, 0.45],
+  [1, 1, 0.2], [-1, 1, 0.2], [1, -1, 0.2], [-1, -1, 0.2],
+]
+
+function drawNetwork(canvas, root) {
+  const box = root.getBoundingClientRect()
+  const W = box.width
+  const H = box.height
+  if (!W || !H) return
+  const css = (name, fallback) =>
+    getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
+  const crimson = css('--color-crimson', '#990000')
+  const paper = css('--color-paper', '#fffffd')
+  const dpr = Math.min(window.devicePixelRatio || 1, 2)
+  canvas.width = Math.round(W * dpr)
+  canvas.height = Math.round(H * dpr)
+  const g = canvas.getContext('2d')
+  g.setTransform(dpr, 0, 0, dpr, 0, 0)
+  g.clearRect(0, 0, W, H)
+
+  const center = (el) => {
+    const r = el.getBoundingClientRect()
+    return { x: r.left + r.width / 2 - box.left, y: r.top + r.height / 2 - box.top }
+  }
+  const ins = [...root.querySelectorAll('[data-in]')].map((el) => ({ ...center(el), k: Number(el.dataset.in) }))
+  const outs = [...root.querySelectorAll('[data-out]')].map(center)
+
+  let seed = 11
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647
+  const gauss = () => Math.sqrt(-2 * Math.log(rand() + 1e-9)) * Math.cos(2 * Math.PI * rand())
+
+  const gw = Math.ceil(W / CELL) + 1
+  const gh = Math.ceil(H / CELL) + 1
+  const red = new Float32Array(gw * gh)
+  const ink = new Float32Array(gw * gh)
+  const splat = (grid, x, y, w) => {
+    const cx = Math.round(x / CELL)
+    const cy = Math.round(y / CELL)
+    for (const [dx, dy, k] of KERNEL) {
+      const gx = cx + dx
+      const gy = cy + dy
+      if (gx >= 0 && gy >= 0 && gx < gw && gy < gh) grid[gy * gw + gx] += w * k
+    }
+  }
+  // A weight bows like a sigmoid: it leaves and arrives level.
+  const along = (a, b, t) => {
+    const dx = (b.x - a.x) * 0.55
+    const u = 1 - t
+    return {
+      x: u * u * u * a.x + 3 * u * u * t * (a.x + dx) + 3 * u * t * t * (b.x - dx) + t * t * t * b.x,
+      y: u * u * u * a.y + 3 * u * u * t * a.y + 3 * u * t * t * b.y + t * t * t * b.y,
+    }
+  }
+  for (const a of ins) {
+    outs.forEach((b, j) => {
+      const own = a.k === j
+      const n = own ? 110 : 34
+      for (let i = 0; i < n; i += 1) {
+        const t = rand()
+        const p = along(a, b, t)
+        // Own weights swell mid-way like a printed stroke; the others stay a thin dust.
+        const spread = own ? 0.6 + 1.8 * Math.sin(Math.PI * t) : 1.4
+        splat(own ? red : ink, p.x + gauss() * spread, p.y + gauss() * spread, own ? 0.32 : 0.3)
+      }
+    })
+  }
+  for (const b of outs) {
+    for (let i = 0; i < 110; i += 1) splat(red, b.x + gauss() * 10, b.y + gauss() * 10, 0.3)
+  }
+
+  const size = (v, gain) => (v < 0.08 ? 0 : Math.min(CELL - 1, Math.max(1, Math.round(Math.sqrt(v * gain) * CELL * 0.5))))
+  const screen = (grid, color, alpha, gain) => {
+    g.fillStyle = color
+    g.globalAlpha = alpha
+    for (let y = 0; y < gh; y += 1) {
+      for (let x = 0; x < gw; x += 1) {
+        const d = size(grid[y * gw + x], gain)
+        if (d) g.fillRect(x * CELL - d / 2, y * CELL - d / 2, d, d)
+      }
+    }
+  }
+  screen(ink, '#171717', 0.22, 0.6)
+  screen(red, crimson, 0.6, 0.5)
+  g.globalAlpha = 1
+
+  // Activities: halftone-shaded neurons, paper dots heavier away from an upper-left light.
+  for (const b of outs) {
+    const r = 11
+    g.fillStyle = crimson
+    g.beginPath()
+    g.arc(b.x, b.y, r, 0, Math.PI * 2)
+    g.fill()
+    g.save()
+    g.clip()
+    g.fillStyle = paper
+    g.globalAlpha = 0.9
+    const step = 3.2
+    for (let py = -r; py <= r; py += step) {
+      for (let px = -r; px <= r; px += step) {
+        const nx = px / r
+        const ny = py / r
+        const q = nx * nx + ny * ny
+        if (q > 1) continue
+        const light = nx * -0.55 + ny * -0.6 + Math.sqrt(1 - q) * 0.58
+        const d = Math.max(0, 0.62 - light) * step * 0.95
+        if (d >= 0.35) g.fillRect(b.x + px - d / 2, b.y + py - d / 2, d, d)
+      }
+    }
+    g.restore()
+    g.globalAlpha = 0.45
+    g.strokeStyle = crimson
+    g.lineWidth = 1
+    g.beginPath()
+    g.arc(b.x, b.y, r + 4, 0, Math.PI * 2)
+    g.stroke()
+    g.globalAlpha = 1
+  }
+  // Topics: small open neurons.
+  for (const a of ins) {
+    g.fillStyle = paper
+    g.strokeStyle = crimson
+    g.lineWidth = 1.25
+    g.beginPath()
+    g.arc(a.x, a.y, 4, 0, Math.PI * 2)
+    g.fill()
+    g.stroke()
+  }
+}
+
 function Network() {
   const ref = useRef(null)
-  const [edges, setEdges] = useState([])
+  const canvasRef = useRef(null)
 
   useLayoutEffect(() => {
     const root = ref.current
-    const measure = () => {
-      const box = root.getBoundingClientRect()
-      const c = (el) => {
-        const r = el.getBoundingClientRect()
-        return { x: r.left + r.width / 2 - box.left, y: r.top + r.height / 2 - box.top }
-      }
-      const ins = [...root.querySelectorAll('[data-in]')]
-      const outs = [...root.querySelectorAll('[data-out]')]
-      const list = []
-      ins.forEach((el) => {
-        const a = c(el)
-        outs.forEach((o) => {
-          const b = c(o)
-          list.push({ a, b, strong: el.dataset.in === o.dataset.out })
-        })
-      })
-      setEdges(list)
-    }
-    measure()
-    const ro = new ResizeObserver(measure)
+    const draw = () => drawNetwork(canvasRef.current, root)
+    draw()
+    const ro = new ResizeObserver(draw)
     ro.observe(root)
-    document.fonts?.ready.then(() => root.isConnected && measure())
+    document.fonts?.ready.then(() => root.isConnected && draw())
     return () => ro.disconnect()
   }, [])
 
   return (
     <div ref={ref} className="relative hidden grid-cols-[14rem_minmax(6rem,11rem)_minmax(0,34rem)] lg:grid">
-      <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
-        {edges
-          .filter((e) => !e.strong)
-          .map((e, i) => (
-            <line key={`w${i}`} x1={e.a.x} y1={e.a.y} x2={e.b.x} y2={e.b.y} className="wwd-weight" />
-          ))}
-        {edges
-          .filter((e) => e.strong)
-          .map((e, i) => (
-            <line
-              key={`s${i}`}
-              x1={e.a.x}
-              y1={e.a.y}
-              x2={e.b.x}
-              y2={e.b.y}
-              pathLength="1"
-              className="wwd-branch wwd-strong"
-              style={{ transitionDelay: `${600 + i * 90}ms` }}
-            />
-          ))}
-      </svg>
+      <canvas ref={canvasRef} className="wwd-reveal pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
 
       {/* Input layer: every topic, grouped by activity, spread over the layer's height. */}
       <ul className="flex flex-col justify-between py-2">
@@ -172,11 +269,11 @@ function Network() {
           a.topics.map((t, j) => (
             <li
               key={t}
-              className={`wwd-topic flex items-center justify-end gap-3 text-sm text-ink-soft ${j === 0 && i > 0 ? 'mt-5' : ''}`}
+              className={`wwd-topic flex items-center justify-end gap-4 text-sm text-ink-soft ${j === 0 && i > 0 ? 'mt-5' : ''}`}
               style={{ transitionDelay: `${300 + (i * 3 + j) * 60}ms` }}
             >
               {t}
-              <span data-in={i} className="relative z-10 h-2.5 w-2.5 shrink-0 rounded-full border-[1.25px] border-crimson bg-paper" />
+              <span data-in={i} aria-hidden="true" className="h-2.5 w-2.5 shrink-0" />
             </li>
           )),
         )}
@@ -185,14 +282,9 @@ function Network() {
 
       {/* Next layer: the activities. */}
       <ol className="flex flex-col gap-12 py-1">
-        {activities.map((a, i) => (
-          <li key={a.title} className="relative pl-9">
-            <span
-              data-out={i}
-              aria-hidden="true"
-              className="wwd-station absolute top-[0.85rem] left-0 z-10 h-4 w-4 rounded-full bg-crimson ring-4 ring-paper"
-              style={{ transitionDelay: `${200 + i * 160}ms` }}
-            />
+        {activities.map((a) => (
+          <li key={a.title} className="relative pl-12">
+            <span data-out aria-hidden="true" className="absolute top-[0.85rem] left-0 h-4 w-4" />
             <h3 className="font-display text-[2.35rem] leading-[1.1] tracking-tight text-ink">{a.title}</h3>
             <p className="mt-3 max-w-[30rem] text-base leading-relaxed text-muted">{a.copy}</p>
           </li>
