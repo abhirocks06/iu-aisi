@@ -83,13 +83,26 @@ export default function WireGraph({ className = '' }) {
 
     let W = 0
     let H = 0
+    // The halftone screen is written straight into a pixel buffer at CSS resolution and
+    // drawn with one call, instead of ~20,000 fillRect calls a frame. Every square sits on
+    // whole CSS pixels and squares in different cells never overlap, so the picture is
+    // identical; Safari in particular pays heavily per canvas call.
+    const screen = document.createElement('canvas')
+    const sctx = screen.getContext('2d')
+    let image = null
+    let pixels = null
+    let dpr = 1
     const size = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      dpr = Math.min(window.devicePixelRatio || 1, 2)
       W = canvas.clientWidth
       H = canvas.clientHeight
       canvas.width = W * dpr
       canvas.height = H * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      screen.width = Math.max(1, W)
+      screen.height = Math.max(1, H)
+      image = sctx.createImageData(screen.width, screen.height)
+      pixels = new Uint32Array(image.data.buffer)
     }
     const resize = new ResizeObserver(size)
     resize.observe(canvas)
@@ -117,51 +130,122 @@ export default function WireGraph({ className = '' }) {
         if (gx >= 0 && gy >= 0 && gx < gw && gy < gh) grid[gy * gw + gx] += w * k
       }
     }
-    const drawScreen = (grid, color, gain, alpha) => {
-      ctx.fillStyle = color
-      ctx.globalAlpha = alpha
+    // The three layers (dust, incident grain, statement grain) are drawn in that order with
+    // these colours and opacities, exactly as three fillRect passes would. Any pixel is
+    // covered by some subset of the three squares in its cell, so its final colour comes
+    // from a table of the 8 possible subsets, composited once.
+    const rgb = (c) => {
+      const t = document.createElement('canvas').getContext('2d')
+      t.fillStyle = c
+      t.fillRect(0, 0, 1, 1)
+      return [...t.getImageData(0, 0, 1, 1).data]
+    }
+    const layers = [
+      { grid: 'dust', gain: 0.6, rgba: rgb(DUST), alpha: 0.55 },
+      { grid: 'incident', gain: 0.5, rgba: rgb(colors.incident), alpha: 0.45 },
+      { grid: 'quote', gain: 0.5, rgba: rgb(colors.quote), alpha: 0.35 },
+    ]
+    const table = new Uint32Array(8)
+    for (let mask = 1; mask < 8; mask += 1) {
+      let r = 0
+      let g = 0
+      let b = 0
+      let a = 0
+      layers.forEach((l, i) => {
+        if (!(mask & (1 << i))) return
+        const la = (l.rgba[3] / 255) * l.alpha
+        r = l.rgba[0] * la + r * (1 - la)
+        g = l.rgba[1] * la + g * (1 - la)
+        b = l.rgba[2] * la + b * (1 - la)
+        a = la + a * (1 - la)
+      })
+      const ch = (v) => Math.round(v / a)
+      table[mask] = (Math.round(a * 255) << 24) | (ch(b) << 16) | (ch(g) << 8) | ch(r)
+    }
+    const squareSize = (v, gain) =>
+      v < 0.08 ? 0 : Math.min(CELL - 1, Math.max(1, Math.round(Math.sqrt(v * gain) * CELL * 0.5)))
+    const drawScreens = () => {
+      pixels.fill(0)
+      const sw = screen.width
+      const sh = screen.height
       for (let gy = 0; gy < gh; gy += 1) {
         for (let gx = 0; gx < gw; gx += 1) {
-          const v = grid[gy * gw + gx]
-          if (v < 0.08) continue
-          const d = Math.min(CELL - 1, Math.max(1, Math.round(Math.sqrt(v * gain) * CELL * 0.5)))
-          ctx.fillRect(gx * CELL - (d >> 1), gy * CELL - (d >> 1), d, d)
+          const k = gy * gw + gx
+          const d0 = squareSize(grids.dust[k], 0.6)
+          const d1 = squareSize(grids.incident[k], 0.5)
+          const d2 = squareSize(grids.quote[k], 0.5)
+          const dm = Math.max(d0, d1, d2)
+          if (!dm) continue
+          const x0 = gx * CELL - (d0 >> 1)
+          const y0 = gy * CELL - (d0 >> 1)
+          const x1 = gx * CELL - (d1 >> 1)
+          const y1 = gy * CELL - (d1 >> 1)
+          const x2 = gx * CELL - (d2 >> 1)
+          const y2 = gy * CELL - (d2 >> 1)
+          const lo = gx * CELL - (dm >> 1)
+          const to = gy * CELL - (dm >> 1)
+          for (let y = Math.max(0, to); y < Math.min(sh, to + dm); y += 1) {
+            for (let x = Math.max(0, lo); x < Math.min(sw, lo + dm); x += 1) {
+              const m = (d0 && x >= x0 && x < x0 + d0 && y >= y0 && y < y0 + d0 ? 1 : 0)
+                | (d1 && x >= x1 && x < x1 + d1 && y >= y1 && y < y1 + d1 ? 2 : 0)
+                | (d2 && x >= x2 && x < x2 + d2 && y >= y2 && y < y2 + d2 ? 4 : 0)
+              if (m) pixels[y * sw + x] = table[m]
+            }
+          }
         }
       }
-      ctx.globalAlpha = 1
+      sctx.putImageData(image, 0, 0)
+      ctx.imageSmoothingEnabled = false
+      ctx.drawImage(screen, 0, 0, W, H)
+      ctx.imageSmoothingEnabled = true
     }
     // A disc shaded with halftone: a dot screen in the page colour, heavier on the side
-    // away from the light, so each node reads as a printed sphere.
+    // away from the light, so each node reads as a printed sphere. The disc is filled as
+    // before; its paper dots are drawn once per radius (to the nearest half pixel) into a
+    // sprite and laid on at the same opacity, which composites exactly like drawing each dot.
+    const dotSprites = new Map()
+    const dotSprite = (rq) => {
+      let sprite = dotSprites.get(rq)
+      if (sprite) return sprite
+      sprite = document.createElement('canvas')
+      const px = Math.ceil((rq * 2 + 2) * dpr)
+      sprite.width = px
+      sprite.height = px
+      const g = sprite.getContext('2d')
+      g.scale(dpr, dpr)
+      const c = rq + 1
+      g.beginPath()
+      g.arc(c, c, rq, 0, Math.PI * 2)
+      g.clip()
+      g.fillStyle = paper
+      g.globalAlpha = 0.9
+      const step = 3.5
+      for (let py = -rq; py <= rq; py += step) {
+        for (let px2 = -rq; px2 <= rq; px2 += step) {
+          const nx = px2 / rq
+          const ny = py / rq
+          const q = nx * nx + ny * ny
+          if (q > 1) continue
+          const light = nx * -0.55 + ny * -0.6 + Math.sqrt(1 - q) * 0.58
+          const d = Math.max(0, 0.62 - light) * step * 0.95
+          if (d < 0.35) continue
+          g.fillRect(c + px2 - d / 2, c + py - d / 2, d, d)
+        }
+      }
+      dotSprites.set(rq, sprite)
+      return sprite
+    }
     const halftoneDisc = (x, y, r, color, alpha) => {
       ctx.globalAlpha = alpha
       ctx.fillStyle = color
       ctx.beginPath()
       ctx.arc(x, y, r, 0, Math.PI * 2)
       ctx.fill()
-      if (r < 6) {
-        ctx.globalAlpha = 1
-        return
+      if (r >= 6) {
+        const rq = Math.ceil(r * 2) / 2
+        const half = (rq + 1) * (r / rq)
+        ctx.drawImage(dotSprite(rq), x - half, y - half, half * 2, half * 2)
       }
-      ctx.save()
-      ctx.beginPath()
-      ctx.arc(x, y, r, 0, Math.PI * 2)
-      ctx.clip()
-      ctx.fillStyle = paper
-      const step = 3.5
-      for (let py = -r; py <= r; py += step) {
-        for (let px = -r; px <= r; px += step) {
-          const nx = px / r
-          const ny = py / r
-          const q = nx * nx + ny * ny
-          if (q > 1) continue
-          const light = nx * -0.55 + ny * -0.6 + Math.sqrt(1 - q) * 0.58
-          const d = Math.max(0, 0.62 - light) * step * 0.95
-          if (d < 0.35) continue
-          ctx.globalAlpha = alpha * 0.9
-          ctx.fillRect(x + px - d / 2, y + py - d / 2, d, d)
-        }
-      }
-      ctx.restore()
       ctx.globalAlpha = 1
     }
 
@@ -221,9 +305,7 @@ export default function WireGraph({ className = '' }) {
           splat(grids[s.n.kind], gx, gy, w)
         }
       }
-      drawScreen(grids.dust, DUST, 0.6, 0.55)
-      drawScreen(grids.incident, colors.incident, 0.5, 0.45)
-      drawScreen(grids.quote, colors.quote, 0.5, 0.35)
+      drawScreens()
       const at = new Map(shown.map((s) => [s.n.id, s]))
 
       ctx.strokeStyle = EDGE
