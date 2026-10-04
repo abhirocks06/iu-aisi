@@ -141,16 +141,20 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="relative z-50 bg-paper text-ink">
+      <header className="sticky top-0 z-[60] bg-paper text-ink">
         <div className="mx-auto flex h-14 max-w-site items-center gap-6 px-5 sm:px-8">
           <Link
             to="/"
-            className="select-none no-underline"
-            onClick={() => {
-              if (location.pathname === '/') setOpen(false)
+            className="relative z-[60] select-none no-underline"
+            onClick={(event) => {
+              setOpen(false)
+              if (location.pathname === '/') {
+                event.preventDefault()
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }
             }}
           >
-            <span className="text-sm font-medium tracking-[0.14em] text-ink uppercase">
+            <span className="text-base font-medium tracking-[0.14em] text-ink uppercase">
               AISI
             </span>
           </Link>
