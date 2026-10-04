@@ -7,7 +7,7 @@ const activities = [
   {
     title: 'Discussion Meetings',
     copy: 'Weekly roundtables on new AI developments, emerging capabilities, and U.S.-China race at the frontier.',
-    tone: 'bg-[#a85a52]',
+    tone: 'bg-[#9a3f38]',
     art: 'discussion',
   },
   {
