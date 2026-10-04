@@ -177,9 +177,9 @@ function ActivityCard({ item }) {
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
-      <section className="bg-paper">
-        <div className="mx-auto grid max-w-site items-center gap-12 px-5 pt-16 pb-20 sm:px-8 sm:pt-20 sm:pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16 lg:pt-16 lg:pb-20">
-          <div className="animate-rise">
+      <section className="relative overflow-hidden bg-paper">
+        <div className="mx-auto flex max-w-site items-center px-5 pt-16 pb-20 sm:px-8 sm:pt-20 sm:pb-24 lg:min-h-[min(46rem,calc(100svh-3.5rem))] lg:py-16">
+          <div className="animate-rise relative z-10 lg:max-w-[28rem]">
             <h1 className="font-display text-[2.4rem] leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.35rem]">
               AI Safety Initiative at&nbsp;IU&nbsp;Bloomington
             </h1>
@@ -201,10 +201,10 @@ export default function Home() {
               </Link>
             </div>
           </div>
-
-          {/* The graph needs the wide two-column hero; phones get the text alone. */}
-          <WireGraph className="animate-rise-delay hidden lg:block" />
         </div>
+        {/* The graph fills the right of the hero out to the window edge and fades in toward
+            the headline. It needs the wide layout; phones get the text alone. */}
+        <WireGraph className="animate-rise-delay absolute inset-y-0 right-0 hidden w-[62%] [mask-image:linear-gradient(to_right,transparent,#000_22%)] lg:block" />
       </section>
 
       <section className="bg-surface">

@@ -20,6 +20,8 @@ const ANCHORS = {
 const DUST = 'rgba(23, 23, 23, 0.34)'
 const EDGE = 'rgba(23, 23, 23, 0.32)'
 const CELL = 5
+// Horizontal centre of the graph within its box; the box bleeds to the window edge.
+const CX = 0.56
 const KERNEL = [
   [0, 0, 1], [1, 0, 0.45], [-1, 0, 0.45], [0, 1, 0.45], [0, -1, 0.45],
   [1, 1, 0.2], [-1, 1, 0.2], [1, -1, 0.2], [-1, -1, 0.2],
@@ -69,6 +71,7 @@ function buildScene() {
 
 export default function WireGraph({ className = '' }) {
   const canvasRef = useRef(null)
+  const screenRef = useRef(null)
   const cardRef = useRef(null)
   const api = useRef({})
   const [card, setCard] = useState(null)
@@ -89,6 +92,12 @@ export default function WireGraph({ className = '' }) {
 
     let W = 0
     let H = 0
+    // The halftone sits on its own canvas behind the main one, so the browser composites
+    // the two layers and nothing is copied per frame.
+    const screen = screenRef.current
+    const sctx = screen.getContext('2d')
+    let lastScreen = -Infinity
+    let lastFocus = null
     const size = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       W = canvas.clientWidth
@@ -96,8 +105,14 @@ export default function WireGraph({ className = '' }) {
       canvas.width = W * dpr
       canvas.height = H * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      screen.width = canvas.width
+      screen.height = canvas.height
+      sctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
-    const resize = new ResizeObserver(size)
+    const resize = new ResizeObserver(() => {
+      size()
+      lastScreen = -Infinity
+    })
     resize.observe(canvas)
     size()
 
@@ -123,66 +138,153 @@ export default function WireGraph({ className = '' }) {
         if (gx >= 0 && gy >= 0 && gx < gw && gy < gh) grid[gy * gw + gx] += w * k
       }
     }
-    const drawScreen = (grid, color, gain, alpha) => {
-      ctx.fillStyle = color
-      ctx.globalAlpha = alpha
+    const drawScreen = (g, grid, color, gain, alpha) => {
+      g.fillStyle = color
+      g.globalAlpha = alpha
+      g.beginPath()
       for (let gy = 0; gy < gh; gy += 1) {
         for (let gx = 0; gx < gw; gx += 1) {
           const v = grid[gy * gw + gx]
           if (v < 0.08) continue
           const d = Math.min(CELL - 1, Math.max(1, Math.round(Math.sqrt(v * gain) * CELL * 0.5)))
-          ctx.fillRect(gx * CELL - (d >> 1), gy * CELL - (d >> 1), d, d)
+          g.rect(gx * CELL - (d >> 1), gy * CELL - (d >> 1), d, d)
         }
       }
-      ctx.globalAlpha = 1
+      g.fill()
+      g.globalAlpha = 1
     }
     // A disc shaded with a halftone dot screen, heavier on the side away from the light.
-    const halftoneDisc = (x, y, r, color, alpha) => {
-      ctx.globalAlpha = alpha
-      ctx.fillStyle = color
-      ctx.beginPath()
-      ctx.arc(x, y, r, 0, Math.PI * 2)
-      ctx.fill()
-      if (r < 6) {
-        ctx.globalAlpha = 1
-        return
-      }
-      ctx.save()
-      ctx.beginPath()
-      ctx.arc(x, y, r, 0, Math.PI * 2)
-      ctx.clip()
-      ctx.fillStyle = paper
-      const step = 3.5
-      for (let py = -r; py <= r; py += step) {
-        for (let px = -r; px <= r; px += step) {
-          const nx = px / r
-          const ny = py / r
-          const q = nx * nx + ny * ny
-          if (q > 1) continue
-          const light = nx * -0.55 + ny * -0.6 + Math.sqrt(1 - q) * 0.58
-          const d = Math.max(0, 0.62 - light) * step * 0.95
-          if (d < 0.35) continue
-          ctx.globalAlpha = alpha * 0.9
-          ctx.fillRect(x + px - d / 2, y + py - d / 2, d, d)
+    // Each colour and size is drawn once into a small sprite and reused every frame.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const sprites = new Map()
+    const discSprite = (color, r) => {
+      const key = `${color}|${r}`
+      let sprite = sprites.get(key)
+      if (sprite) return sprite
+      const size = Math.ceil((r * 2 + 2) * dpr)
+      sprite = document.createElement('canvas')
+      sprite.width = size
+      sprite.height = size
+      const g = sprite.getContext('2d')
+      g.scale(dpr, dpr)
+      const c = r + 1
+      g.fillStyle = color
+      g.beginPath()
+      g.arc(c, c, r, 0, Math.PI * 2)
+      g.fill()
+      if (r >= 6) {
+        g.clip()
+        g.fillStyle = paper
+        g.globalAlpha = 0.9
+        const step = 3.5
+        g.beginPath()
+        for (let py = -r; py <= r; py += step) {
+          for (let px = -r; px <= r; px += step) {
+            const nx = px / r
+            const ny = py / r
+            const q = nx * nx + ny * ny
+            if (q > 1) continue
+            const light = nx * -0.55 + ny * -0.6 + Math.sqrt(1 - q) * 0.58
+            const d = Math.max(0, 0.62 - light) * step * 0.95
+            if (d >= 0.35) g.rect(c + px - d / 2, c + py - d / 2, d, d)
+          }
         }
+        g.fill()
       }
-      ctx.restore()
+      sprites.set(key, sprite)
+      return sprite
+    }
+    const halftoneDisc = (x, y, r, color, alpha) => {
+      const rr = Math.max(2, Math.round(r))
+      const sprite = discSprite(color, rr)
+      ctx.globalAlpha = alpha
+      ctx.drawImage(sprite, x - rr - 1, y - rr - 1, rr * 2 + 2, rr * 2 + 2)
       ctx.globalAlpha = 1
     }
 
     const state = { yaw: 0.3, pitch: 0.28, drag: null, hover: null, pinned: null }
+    let cy = 1
+    let sy = 0
+    let cp = 1
+    let sp = 0
     const project = ([x, y, z]) => {
-      const cy = Math.cos(state.yaw)
-      const sy = Math.sin(state.yaw)
-      const cp = Math.cos(state.pitch)
-      const sp = Math.sin(state.pitch)
       const x1 = x * cy - z * sy
       const z1 = x * sy + z * cy
       const y1 = y * cp - z1 * sp
       const z2 = y * sp + z1 * cp
       const f = 2.4 / (2.4 + z2)
-      const s = Math.min(W * 0.5, H * 0.55) * f
-      return [W / 2 + x1 * s, H * 0.52 - y1 * s, -z2, f]
+      const s = Math.min(W * 0.4, H * 0.44) * f
+      return [W * CX + x1 * s, H * 0.5 - y1 * s, -z2, f]
+    }
+
+    // Anchor labels orbit their node (after Moritz Stefaner's label placement): each points
+    // away from the graph's centre, its angle eases toward that direction, and its alignment
+    // blends from left- to right-aligned with the angle. Labels are placed nearest-first; one
+    // that would cover a nearer label or another node fades out until the space clears.
+    const handleFont = `500 14px ${font}`
+    const metaFont = `12px ${font}`
+    const drawLabels = (list, focus, dt) => {
+      const ease = 1 - Math.exp(-dt / 200)
+      const placed = []
+      const discs = list.map((s) => ({ id: s.n.id, x: s.x, y: s.y, r: s.r + 4 }))
+      for (const s of [...list].sort((p, q) => q.z - p.z)) {
+        const { n } = s
+        if (!n.handle) continue
+        const dx = s.x - W * CX
+        const dy = s.y - H * 0.5
+        const target = Math.hypot(dx, dy) > 8 ? Math.atan2(dy * 0.6, dx) : (n.ang ?? 0)
+        if (n.ang === undefined) n.ang = target
+        n.ang += Math.atan2(Math.sin(target - n.ang), Math.cos(target - n.ang)) * ease
+        const c = Math.cos(n.ang)
+        const sn = Math.sin(n.ang)
+        ctx.font = handleFont
+        const w1 = ctx.measureText(n.handle).width
+        ctx.font = metaFont
+        const w2 = ctx.measureText(n.short).width
+        const bw = Math.max(w1, w2)
+        const bh = 32
+        const ax = s.x + c * (s.r + 16)
+        const ay = s.y + sn * (s.r + 16)
+        const freeLeft = ax + 4 * c - (bw * (1 - c)) / 2
+        const left = Math.max(8, Math.min(W - bw - 8, freeLeft))
+        // Pushed in from the edge, a label can land on its own node; only then does that count.
+        const pinnedToEdge = Math.abs(left - freeLeft) > 1
+        const top = Math.max(8, Math.min(H - bh - 8, ay + 3 * sn - (bh * (1 - sn)) / 2))
+        const box = { l: left - 4, t: top - 2, r: left + bw + 4, b: top + bh + 2 }
+        const hitsBox = placed.some((o) => box.l < o.r && box.r > o.l && box.t < o.b && box.b > o.t)
+        const hitsNode = discs.some((d) => (d.id !== n.id || pinnedToEdge)
+          && d.x + d.r > box.l && d.x - d.r < box.r && d.y + d.r > box.t && d.y - d.r < box.b)
+        const wanted = s.z > -0.25 && focus !== n.id && !hitsBox && !hitsNode ? 1 : 0
+        n.vis = (n.vis ?? wanted) + (wanted - (n.vis ?? wanted)) * ease
+        if (wanted) placed.push(box)
+        if (n.vis < 0.02) continue
+
+        const depth = Math.max(0.45, Math.min(1, 0.72 + s.z * 0.55))
+        const a = (focus ? 0.3 : 1) * depth * n.vis
+        ctx.globalAlpha = a * 0.4
+        ctx.strokeStyle = ink
+        ctx.lineWidth = 0.75
+        ctx.beginPath()
+        ctx.moveTo(s.x + c * (s.r + 3), s.y + sn * (s.r + 3))
+        ctx.lineTo(ax, ay)
+        ctx.stroke()
+        ctx.globalAlpha = a
+        ctx.textBaseline = 'top'
+        ctx.textAlign = 'left'
+        ctx.lineJoin = 'round'
+        ctx.lineWidth = 4
+        ctx.strokeStyle = paper
+        const line = (text, f, fill, wl, y) => {
+          const x = left + ((bw - wl) * (1 - c)) / 2
+          ctx.font = f
+          ctx.strokeText(text, x, y)
+          ctx.fillStyle = fill
+          ctx.fillText(text, x, y)
+        }
+        line(n.handle, handleFont, ink, w1, top)
+        line(n.short, metaFont, muted, w2, top + 18)
+      }
+      ctx.globalAlpha = 1
     }
 
     let shown = []
@@ -203,32 +305,56 @@ export default function WireGraph({ className = '' }) {
       el.style.top = `${y}px`
     }
 
-    const frame = (now) => {
-      const dt = Math.min(64, now - last)
-      last = now
-      const focus = state.hover || state.pinned
-      if (!reduce && !state.drag && !focus) state.yaw += dt * 0.00012
-      ctx.clearRect(0, 0, W, H)
-
+    const drawScreens = (focus) => {
       resetGrids()
       for (const p of dust) {
         const [x, y, z] = project(p)
         splat(grids.dust, x, y, Math.max(0.25, Math.min(1, 0.6 + z * 0.6)))
       }
+      for (const n of nodes) {
+        const [, , z] = project(n.p)
+        const w = Math.max(0.3, Math.min(1, 0.7 + z * 0.55)) * (focus && focus !== n.id ? 0.4 : 1)
+        for (const g of n.grain) {
+          const [gx, gy] = project([n.p[0] + g[0], n.p[1] + g[1], n.p[2] + g[2]])
+          splat(grids[n.kind], gx, gy, w)
+        }
+      }
+      sctx.clearRect(0, 0, W, H)
+      drawScreen(sctx, grids.dust, DUST, 0.45, 0.4)
+      drawScreen(sctx, grids.incident, colors.incident, 0.5, 0.45)
+      drawScreen(sctx, grids.quote, colors.quote, 0.5, 0.35)
+    }
+
+    const frame = (now) => {
+      const focus = state.hover || state.pinned
+      // Idle drift is slow, so every other frame is enough; interaction gets full rate.
+      if (!focus && !state.drag && now - last < 30) {
+        frameId = requestAnimationFrame(frame)
+        return
+      }
+      const dt = Math.min(64, now - last)
+      last = now
+      if (!reduce && !state.drag && !focus) state.yaw += dt * 0.00012
+      ctx.clearRect(0, 0, W, H)
+
+      cy = Math.cos(state.yaw)
+      sy = Math.sin(state.yaw)
+      cp = Math.cos(state.pitch)
+      sp = Math.sin(state.pitch)
+
+      // The halftone layer barely changes between frames, so it is rebuilt into its own
+      // canvas about ten times a second while idle, and every frame during interaction.
+      const refresh = focus !== lastFocus || state.drag || now - lastScreen > 100
+      lastFocus = focus
+      if (refresh) {
+        lastScreen = now
+        drawScreens(focus)
+      }
+
       shown = nodes.map((n) => {
         const [x, y, z, f] = project(n.p)
         return { n, x, y, z, r: n.size * f * 1.1 }
       })
-      for (const s of shown) {
-        const w = Math.max(0.3, Math.min(1, 0.7 + s.z * 0.55)) * (focus && focus !== s.n.id ? 0.4 : 1)
-        for (const g of s.n.grain) {
-          const [gx, gy] = project([s.n.p[0] + g[0], s.n.p[1] + g[1], s.n.p[2] + g[2]])
-          splat(grids[s.n.kind], gx, gy, w)
-        }
-      }
-      drawScreen(grids.dust, DUST, 0.6, 0.55)
-      drawScreen(grids.incident, colors.incident, 0.5, 0.45)
-      drawScreen(grids.quote, colors.quote, 0.5, 0.35)
 
       const at = new Map(shown.map((s) => [s.n.id, s]))
       ctx.strokeStyle = EDGE
@@ -263,60 +389,9 @@ export default function WireGraph({ className = '' }) {
         ctx.arc(s.x, s.y, r + 4, 0, Math.PI * 2)
         ctx.stroke()
 
-        // Anchor labels orbit their node (after Moritz Stefaner's label placement): the
-        // label points away from the centre, its angle eases toward that direction, and
-        // its alignment blends from left- to right-aligned with the angle.
-        if (n.handle && s.z > -0.55 && focus !== n.id) {
-          const dx = s.x - W / 2
-          const dy = s.y - H * 0.52
-          const target = Math.hypot(dx, dy) > 8 ? Math.atan2(dy * 0.6, dx) : (n.ang ?? 0)
-          if (n.ang === undefined) n.ang = target
-          const delta = Math.atan2(Math.sin(target - n.ang), Math.cos(target - n.ang))
-          n.ang += delta * (1 - Math.exp(-dt / 200))
-          const c = Math.cos(n.ang)
-          const sn = Math.sin(n.ang)
-
-          const turn = Math.max(0, Math.min(1, (s.z + 0.55) / 0.35))
-          const a = (focus ? 0.3 : 1) * Math.max(0.45, depth) * turn
-          const handleFont = `500 14px ${font}`
-          const metaFont = `12px ${font}`
-          ctx.font = handleFont
-          const w1 = ctx.measureText(n.handle).width
-          ctx.font = metaFont
-          const w2 = ctx.measureText(n.short).width
-          const bw = Math.max(w1, w2)
-          const bh = 32
-
-          const ax = s.x + c * (r + 16)
-          const ay = s.y + sn * (r + 16)
-          ctx.globalAlpha = a * 0.4
-          ctx.strokeStyle = ink
-          ctx.lineWidth = 0.75
-          ctx.beginPath()
-          ctx.moveTo(s.x + c * (r + 3), s.y + sn * (r + 3))
-          ctx.lineTo(ax, ay)
-          ctx.stroke()
-          const left = Math.max(8, Math.min(W - bw - 8, ax + 4 * c - (bw * (1 - c)) / 2))
-          const top = Math.max(8, Math.min(H - bh - 8, ay + 3 * sn - (bh * (1 - sn)) / 2))
-
-          ctx.globalAlpha = a
-          ctx.textBaseline = 'top'
-          ctx.textAlign = 'left'
-          ctx.lineJoin = 'round'
-          ctx.lineWidth = 4
-          ctx.strokeStyle = paper
-          const line = (text, f, fill, wl, y) => {
-            const x = left + ((bw - wl) * (1 - c)) / 2
-            ctx.font = f
-            ctx.strokeText(text, x, y)
-            ctx.fillStyle = fill
-            ctx.fillText(text, x, y)
-          }
-          line(n.handle, handleFont, ink, w1, top)
-          line(n.short, metaFont, muted, w2, top + 18)
-        }
         ctx.globalAlpha = 1
       }
+      drawLabels(shown, focus, dt)
       if (state.pinned) placeCard(at.get(state.pinned))
       frameId = requestAnimationFrame(frame)
     }
@@ -427,7 +502,9 @@ export default function WireGraph({ className = '' }) {
   }, [])
 
   return (
-    <div className={`relative aspect-[5/4] w-full ${className}`}>
+    // The caller positions and sizes the box (it must be positioned for the card).
+    <div className={className}>
+      <canvas ref={screenRef} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
       <canvas
         ref={canvasRef}
         className="absolute inset-0 h-full w-full cursor-grab touch-none"
