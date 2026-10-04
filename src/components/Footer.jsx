@@ -51,8 +51,8 @@ export default function Footer() {
   const { pathname } = useLocation()
 
   return (
-    <footer className="border-t border-line bg-paper">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-5 py-6 text-center sm:px-8 md:flex-row md:items-center md:justify-between md:gap-4 md:text-left">
+    <footer className="bg-paper">
+      <div className="mx-auto flex max-w-site flex-col items-center gap-5 px-5 py-6 text-center sm:px-8 md:flex-row md:items-center md:justify-between md:gap-4 md:text-left">
         <Link
           to="/"
           className="mb-1 flex select-none items-center gap-2 no-underline md:mb-0"
@@ -98,10 +98,10 @@ export default function Footer() {
           </Link>
         </nav>
       </div>
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 border-t border-line/70 px-5 py-5 text-center sm:px-8 md:flex-row md:justify-between md:text-left">
+      <div className="mx-auto flex max-w-site flex-col items-center gap-4 border-t border-line/70 px-5 py-5 text-center sm:px-8 md:flex-row md:justify-between md:text-left">
         <p className="text-xs leading-relaxed text-muted">
-          This organization is a registered student organization of Indiana
-          University.
+          This organization is a registered student
+          <br className="sm:hidden" /> organization of Indiana University.
         </p>
         <nav className="flex shrink-0 items-center justify-center gap-0.5 md:gap-3" aria-label="Social">
           {socialLinks.map((link) => (

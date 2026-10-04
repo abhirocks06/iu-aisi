@@ -50,7 +50,7 @@ export default function EventsCalendar() {
   return (
     <div className="animate-rise-delay w-full">
       <div className="flex items-center justify-between gap-4">
-        <h2 className="text-2xl font-medium tracking-tight text-ink">{monthLabel}</h2>
+        <h2 className="font-display text-2xl tracking-tight text-ink sm:text-3xl">{monthLabel}</h2>
         <div className="flex items-center gap-1">
           <button
             type="button"
@@ -119,10 +119,10 @@ export default function EventsCalendar() {
               className={[
                 'flex min-h-16 flex-col items-start gap-1 border-b border-r border-line px-2 py-2 text-left transition-colors sm:min-h-24',
                 isSelected
-                  ? 'bg-neutral-100'
+                  ? 'bg-surface'
                   : hasEvents
-                    ? 'bg-crimson/[0.04] hover:bg-neutral-50'
-                    : 'bg-paper hover:bg-neutral-50',
+                    ? 'bg-crimson/[0.04] hover:bg-surface'
+                    : 'bg-paper hover:bg-surface',
               ].join(' ')}
             >
               <span

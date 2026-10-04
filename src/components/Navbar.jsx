@@ -1,7 +1,7 @@
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { CONTACT_EMAIL, COURSE_URL } from '../data/posts'
+import { COURSE_URL, DISCORD_INVITE } from '../data/posts'
 
 const links = [
   { href: COURSE_URL, label: 'P241', external: true },
@@ -10,8 +10,7 @@ const links = [
   { to: '/team', label: 'Team' },
 ]
 
-function BurgerButton({ open, onClick, onCrimson }) {
-  const bar = onCrimson ? 'bg-white' : 'bg-ink'
+function BurgerButton({ open, onClick }) {
   return (
     <button
       type="button"
@@ -22,32 +21,26 @@ function BurgerButton({ open, onClick, onCrimson }) {
       onClick={onClick}
     >
       <span
-        className={`block h-px w-5 origin-center transition-all duration-200 ${bar} ${open ? 'translate-y-[3.5px] rotate-45' : ''}`}
+        className={`block h-px w-5 origin-center bg-ink transition-all duration-200 ${open ? 'translate-y-[3.5px] rotate-45' : ''}`}
       />
       <span
-        className={`block h-px w-5 origin-center transition-all duration-200 ${bar} ${open ? '-translate-y-[3.5px] -rotate-45' : ''}`}
+        className={`block h-px w-5 origin-center bg-ink transition-all duration-200 ${open ? '-translate-y-[3.5px] -rotate-45' : ''}`}
       />
     </button>
   )
 }
 
-function desktopClass(onCrimson, isActive) {
+function desktopClass(isActive) {
   return [
-    'py-1 text-sm font-medium tracking-wide no-underline transition-colors',
-    onCrimson
-      ? isActive
-        ? 'text-white'
-        : 'text-white/75 hover:text-white'
-      : isActive
-        ? 'text-crimson'
-        : 'text-ink hover:text-crimson',
+    'py-1 text-sm font-normal tracking-wide no-underline transition-colors',
+    isActive ? 'text-ink' : 'text-ink-soft hover:text-ink',
   ].join(' ')
 }
 
 function mobileClass(isActive) {
   return [
-    'mobile-menu-item text-3xl font-medium tracking-tight no-underline transition-colors sm:text-4xl',
-    isActive ? 'text-crimson' : 'text-ink hover:text-crimson',
+    'mobile-menu-item font-display text-[2.35rem] leading-none tracking-tight no-underline transition-opacity sm:text-5xl',
+    isActive ? 'text-ink' : 'text-ink/55 hover:text-ink hover:opacity-100',
   ].join(' ')
 }
 
@@ -60,9 +53,9 @@ function MobileMenuOverlay({ pathname, onClose }) {
       aria-modal="true"
       aria-label="Mobile navigation"
     >
-      <div className="h-14 shrink-0 border-b border-line bg-paper" aria-hidden />
-      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-5 sm:px-8">
-        <nav className="flex flex-col gap-5 pt-10" aria-label="Mobile">
+      <div className="h-14 shrink-0 bg-paper" aria-hidden />
+      <div className="mx-auto flex w-full max-w-site flex-1 flex-col px-5 sm:px-8">
+        <nav className="flex flex-col gap-7 pt-8" aria-label="Mobile">
           {links.map((link, index) =>
             link.external ? (
               <a
@@ -93,17 +86,15 @@ function MobileMenuOverlay({ pathname, onClose }) {
           )}
         </nav>
 
-        <div
-          className="mobile-menu-item mt-auto border-t border-line py-8"
-          style={{ animationDelay: '0.22s' }}
-        >
-          <p className="text-sm text-muted">Indiana University Bloomington</p>
+        <div className="mobile-menu-item mt-auto py-8" style={{ animationDelay: '0.2s' }}>
           <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="mt-2 inline-block text-sm font-medium text-crimson no-underline hover:opacity-70"
+            href={DISCORD_INVITE}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-solid w-full"
             onClick={onClose}
           >
-            {CONTACT_EMAIL}
+            Get involved
           </a>
         </div>
       </div>
@@ -115,8 +106,6 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const location = useLocation()
-  const onHome = location.pathname === '/'
-  const onCrimson = onHome && !open
 
   useEffect(() => {
     setMounted(true)
@@ -152,13 +141,8 @@ export default function Navbar() {
 
   return (
     <>
-      <header
-        className={[
-          'relative z-50',
-          onCrimson ? 'bg-crimson text-white' : 'bg-paper text-ink',
-        ].join(' ')}
-      >
-        <div className="mx-auto flex h-14 max-w-6xl items-center gap-6 px-5 sm:px-8">
+      <header className="relative z-50 bg-paper text-ink">
+        <div className="mx-auto flex h-14 max-w-site items-center gap-6 px-5 sm:px-8">
           <Link
             to="/"
             className="select-none no-underline"
@@ -166,17 +150,12 @@ export default function Navbar() {
               if (location.pathname === '/') setOpen(false)
             }}
           >
-            <span
-              className={[
-                'text-xl font-semibold tracking-tight',
-                onCrimson ? 'text-white' : 'text-ink',
-              ].join(' ')}
-            >
+            <span className="text-sm font-medium tracking-[0.14em] text-ink uppercase">
               AISI
             </span>
           </Link>
 
-          <nav className="ml-auto hidden items-center gap-8 md:flex" aria-label="Primary">
+          <nav className="ml-auto hidden items-center gap-7 md:flex" aria-label="Primary">
             {links.map((link) =>
               link.external ? (
                 <a
@@ -184,7 +163,7 @@ export default function Navbar() {
                   href={link.href}
                   target="_blank"
                   rel="noreferrer"
-                  className={desktopClass(onCrimson, false)}
+                  className={desktopClass(false)}
                 >
                   {link.label}
                 </a>
@@ -193,19 +172,23 @@ export default function Navbar() {
                   key={link.to}
                   to={link.to}
                   end={link.end}
-                  className={({ isActive }) => desktopClass(onCrimson, isActive)}
+                  className={({ isActive }) => desktopClass(isActive)}
                 >
                   {link.label}
                 </NavLink>
               ),
             )}
+            <a
+              href={DISCORD_INVITE}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-solid !px-3.5 !py-1.5 text-xs"
+            >
+              Get involved
+            </a>
           </nav>
 
-          <BurgerButton
-            open={open}
-            onClick={() => setOpen((value) => !value)}
-            onCrimson={onCrimson}
-          />
+          <BurgerButton open={open} onClick={() => setOpen((value) => !value)} />
         </div>
       </header>
       {mobileMenu}

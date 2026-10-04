@@ -8,15 +8,19 @@ const socialActions = [
 export default function JoinCTA({
   id,
   title = 'New members always welcome.',
-  description = 'No CS or AI background required. Join the Discord for meetings, updates, and discussion.',
+  description,
   mode = 'join',
 }) {
   return (
-    <section id={id} className="mt-auto bg-crimson text-white">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 px-5 py-20 text-center sm:px-8 sm:py-24 md:flex-row md:items-center md:justify-between md:text-left">
-        <div className="min-w-0 md:max-w-none">
-          <h2 className="text-3xl font-medium tracking-tight">{title}</h2>
-          <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-white/70 md:mx-0">{description}</p>
+    <section id={id} className="mt-auto bg-surface">
+      <div className="mx-auto flex max-w-site flex-col items-center gap-8 px-5 py-20 text-center sm:px-8 sm:py-24 md:flex-row md:items-end md:justify-between md:text-left">
+        <div className="min-w-0 max-w-xl">
+          <h2 className="font-display text-3xl tracking-tight text-ink sm:text-4xl">{title}</h2>
+          {description ? (
+            <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-muted md:mx-0">
+              {description}
+            </p>
+          ) : null}
         </div>
         <div className="flex flex-wrap items-center justify-center gap-3 md:justify-end">
           {mode === 'social' ? (
@@ -26,21 +30,21 @@ export default function JoinCTA({
                 href={action.href}
                 target="_blank"
                 rel="noreferrer"
-                className={action.primary ? 'btn-primary' : 'btn-ghost text-white'}
+                className={action.primary ? 'btn-solid' : 'btn-outline'}
               >
                 {action.label}
               </a>
             ))
           ) : mode === 'partner' ? (
             <>
-              <a href={`mailto:${CONTACT_EMAIL}`} className="btn-primary">
+              <a href={`mailto:${CONTACT_EMAIL}`} className="btn-solid">
                 Email us
               </a>
               <a
                 href={DISCORD_INVITE}
                 target="_blank"
                 rel="noreferrer"
-                className="btn-ghost text-white"
+                className="btn-outline"
               >
                 Join Discord
               </a>
@@ -51,11 +55,11 @@ export default function JoinCTA({
                 href={DISCORD_INVITE}
                 target="_blank"
                 rel="noreferrer"
-                className="btn-primary"
+                className="btn-solid"
               >
                 Join Discord
               </a>
-              <a href={`mailto:${CONTACT_EMAIL}`} className="btn-ghost text-white">
+              <a href={`mailto:${CONTACT_EMAIL}`} className="btn-outline">
                 Email us
               </a>
             </>

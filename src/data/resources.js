@@ -8,7 +8,7 @@ export const resourceSections = [
         title: 'P241: Foundations of Artificial Intelligence Ethics',
         href: COURSE_URL,
         description:
-          'Interpretability, alignment, and the ethics of advanced AI. Taught by Professor Calum McNamara.',
+          'A no-background-required course on what it means to understand AI systems and keep them aligned with human interests.',
       },
     ],
   },
@@ -16,25 +16,19 @@ export const resourceSections = [
     title: 'Foundations',
     items: [
       {
-        title: 'Machines of Loving Grace',
-        href: 'https://darioamodei.com/essay/machines-of-loving-grace',
-        description: 'Dario Amodei on how powerful AI could transform the world for the better.',
+        title: 'AGI Safety from First Principles: Introduction',
+        href: 'https://www.alignmentforum.org/s/mzgtmmTKKn5MnWmwy/p/uMQ3cqWDPHhjtiesc',
+        description: 'Why AGI safety is hard from first principles.',
       },
       {
         title: 'Instrumental Convergence',
         href: 'https://www.youtube.com/watch?v=ZeecOKBus3Q',
-        description: 'Rob Miles on why many goals push systems toward power-seeking.',
+        description: 'Why many goals push systems toward power-seeking.',
       },
       {
         title: 'The True Story of How GPT-2 Became Maximally Lewd',
         href: 'https://www.youtube.com/watch?v=qV_rOlHjvvs',
-        description:
-          'Rational Animations on reward hacking and specification gaming in a real model.',
-      },
-      {
-        title: 'AGI Safety from First Principles: Introduction',
-        href: 'https://www.alignmentforum.org/s/mzgtmmTKKn5MnWmwy/p/uMQ3cqWDPHhjtiesc',
-        description: 'Richard Ngo’s series opener on why AGI safety is hard from first principles.',
+        description: 'Reward hacking and specification gaming in a real model.',
       },
     ],
   },
@@ -44,8 +38,7 @@ export const resourceSections = [
       {
         title: 'What Do Neural Networks Really Learn?',
         href: 'https://www.youtube.com/watch?v=jGCvY4gNnA8',
-        description:
-          'Rational Animations on interpretability and what concepts models actually represent.',
+        description: 'Interpretability and what concepts models actually represent.',
       },
       {
         title: 'Mesa-Optimizers & Inner Alignment',
@@ -65,8 +58,7 @@ export const resourceSections = [
       {
         title: 'Unresolved Debates About the Future of AI',
         href: 'https://helentoner.substack.com/p/unresolved-debates-about-the-future',
-        description:
-          'Helen Toner on key disagreements shaping AI governance and long-term safety.',
+        description: 'Key disagreements shaping AI governance and long-term safety.',
       },
       {
         title: 'The Adolescence of Technology',
@@ -86,19 +78,18 @@ export const resourceSections = [
       {
         title: 'The Alignment Problem',
         href: 'https://brianchristian.org/the-alignment-problem/',
-        description: 'Brian Christian on how machine learning systems go wrong in practice.',
+        description: 'How machine learning systems go wrong in practice.',
       },
       {
         title: 'Superintelligence',
         href: 'https://global.oup.com/academic/product/superintelligence-9780198739838',
         description:
-          'Nick Bostrom’s classic on paths to advanced AI and the strategic challenges of controlling it.',
+          'Classic on paths to advanced AI and the strategic challenges of controlling it.',
       },
       {
         title: 'If Anyone Builds It, Everyone Dies',
         href: 'https://ifanyonebuildsit.com/',
-        description:
-          'Eliezer Yudkowsky and Nate Soares on why racing to superhuman AI is an extinction risk.',
+        description: 'Why racing to superhuman AI is an extinction risk.',
       },
     ],
   },
@@ -118,7 +109,7 @@ export const resourceSections = [
       {
         title: 'The AI Power Podcast',
         href: 'https://open.spotify.com/show/2Jvhb2bZs32UzYwLU5UWrm',
-        description: 'Gregory C. Allen on AI policy, U.S.-China competition, and how AI is reshaping global power.',
+        description: 'AI policy, U.S.-China competition, and how AI is reshaping global power.',
       },
     ],
   },
@@ -128,7 +119,7 @@ export const resourceSections = [
       {
         title: 'BlueDot Impact',
         href: 'https://bluedot.org/',
-        description: 'Free courses and talent programs for people entering AI safety and governance.',
+        description: 'Free courses and programs for AI safety and governance careers.',
       },
       {
         title: 'ARENA',
@@ -138,7 +129,7 @@ export const resourceSections = [
       {
         title: 'SPAR',
         href: 'https://sparai.org/',
-        description: 'A part-time remote research fellowship pairing mentees with AI safety mentors.',
+        description: 'Research fellowship pairing mentees with AI safety mentors.',
       },
     ],
   },

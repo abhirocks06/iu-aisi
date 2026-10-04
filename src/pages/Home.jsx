@@ -1,68 +1,196 @@
 import { Link } from 'react-router-dom'
+import HeroVisual from '../components/HeroVisual'
 import JoinCTA from '../components/JoinCTA'
-import NeuralNetVisual from '../components/NeuralNetVisual'
 import { DISCORD_INVITE } from '../data/posts'
 
 const activities = [
   {
     title: 'Discussion Meetings',
     copy: 'Weekly roundtables on new AI developments, emerging capabilities, and U.S.-China race at the frontier.',
-    image: '/illustrations/discussion.svg',
-    imageAlt: '',
+    tone: 'bg-[#a85a52]',
+    art: 'discussion',
   },
   {
     title: 'Research Projects',
     copy: 'Team projects on alignment, interpretability, evaluations, and governance frameworks.',
-    image: '/illustrations/research.svg',
-    imageAlt: '',
+    tone: 'bg-crimson',
+    art: 'research',
   },
   {
     title: 'Community Events',
     copy: 'Speaker panels and networking sessions with researchers, policymakers, and industry leaders.',
-    image: '/illustrations/events.svg',
-    imageAlt: '',
+    tone: 'bg-crimson-deep',
+    art: 'events',
   },
 ]
+
+/** Soft editorial bottom graphics — closer to Goodfire / hero language than icon line art. */
+function CardArt({ kind }) {
+  if (kind === 'discussion') {
+    return (
+      <svg viewBox="0 0 320 180" className="h-full w-full" aria-hidden="true">
+        <defs>
+          <linearGradient id="art-d" x1="40" y1="20" x2="280" y2="160" gradientUnits="userSpaceOnUse">
+            <stop stopColor="white" stopOpacity="0.55" />
+            <stop offset="1" stopColor="white" stopOpacity="0.08" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M20 150C48 96 92 58 148 52c56-6 96 28 132 18 28-8 48-36 70-28"
+          fill="none"
+          stroke="url(#art-d)"
+          strokeWidth="1.1"
+        />
+        <path
+          d="M10 168C54 118 108 84 168 80c52-4 86 30 122 22 30-6 52-28 78-18"
+          fill="none"
+          stroke="white"
+          strokeOpacity="0.28"
+          strokeWidth="1"
+        />
+        <ellipse cx="118" cy="118" rx="54" ry="34" fill="white" fillOpacity="0.08" />
+        <ellipse cx="196" cy="128" rx="70" ry="40" fill="white" fillOpacity="0.12" />
+        <ellipse cx="248" cy="142" rx="48" ry="28" fill="white" fillOpacity="0.07" />
+      </svg>
+    )
+  }
+
+  if (kind === 'research') {
+    const cols = 8
+    const rows = 5
+    const cells = []
+    for (let r = 0; r < rows; r += 1) {
+      for (let c = 0; c < cols; c += 1) {
+        const t = ((r * 3 + c * 5) % 11) / 11
+        cells.push(
+          <rect
+            key={`${r}-${c}`}
+            x={36 + c * 32}
+            y={48 + r * 22}
+            width="22"
+            height="14"
+            fill="white"
+            fillOpacity={0.06 + t * 0.28}
+          />,
+        )
+      }
+    }
+    return (
+      <svg viewBox="0 0 320 180" className="h-full w-full" aria-hidden="true">
+        <defs>
+          <linearGradient id="art-r" x1="0" y1="0" x2="0" y2="180" gradientUnits="userSpaceOnUse">
+            <stop stopColor="white" stopOpacity="0" />
+            <stop offset="0.35" stopColor="white" stopOpacity="0.5" />
+            <stop offset="1" stopColor="white" stopOpacity="0.15" />
+          </linearGradient>
+        </defs>
+        <g opacity="0.9">{cells}</g>
+        <path
+          d="M28 40h264M28 160h264"
+          stroke="url(#art-r)"
+          strokeWidth="1"
+        />
+      </svg>
+    )
+  }
+
+  return (
+    <svg viewBox="0 0 320 180" className="h-full w-full" aria-hidden="true">
+      <defs>
+        <linearGradient id="art-e" x1="160" y1="20" x2="160" y2="170" gradientUnits="userSpaceOnUse">
+          <stop stopColor="white" stopOpacity="0.4" />
+          <stop offset="1" stopColor="white" stopOpacity="0.05" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M40 150c28-46 62-72 120-72s92 26 120 72"
+        fill="none"
+        stroke="url(#art-e)"
+        strokeWidth="1.15"
+      />
+      <path
+        d="M64 150c22-34 48-52 96-52s74 18 96 52"
+        fill="none"
+        stroke="white"
+        strokeOpacity="0.22"
+        strokeWidth="1"
+      />
+      <path
+        d="M92 150c16-22 34-34 68-34s52 12 68 34"
+        fill="none"
+        stroke="white"
+        strokeOpacity="0.16"
+        strokeWidth="1"
+      />
+      <circle cx="160" cy="58" r="18" fill="white" fillOpacity="0.1" />
+      <circle cx="160" cy="58" r="8" fill="white" fillOpacity="0.22" />
+      <path d="M24 158h272" stroke="white" strokeOpacity="0.2" strokeWidth="1" />
+    </svg>
+  )
+}
+
+function ActivityCard({ item }) {
+  return (
+    <li
+      className={[
+        'relative flex min-h-[22rem] flex-col overflow-hidden p-6 text-white sm:min-h-[26rem] sm:p-7',
+        item.tone,
+      ].join(' ')}
+    >
+      <h3 className="relative z-10 text-xl font-medium tracking-tight">{item.title}</h3>
+      <p className="relative z-10 mt-4 text-[0.95rem] leading-relaxed text-white/80">
+        {item.copy}
+      </p>
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[48%]"
+        aria-hidden="true"
+      >
+        <CardArt kind={item.art} />
+      </div>
+    </li>
+  )
+}
 
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
-      <section className="bg-crimson text-white">
-        <div className="mx-auto grid max-w-6xl items-center justify-items-center gap-12 px-5 pt-16 pb-24 text-center sm:px-8 sm:pt-20 sm:pb-28 lg:grid-cols-[1fr_auto] lg:justify-items-stretch lg:gap-20 lg:pt-24 lg:pb-32 lg:text-left">
-          <div className="flex flex-col items-center lg:items-start">
-            <h1 className="animate-rise text-[2rem] font-medium leading-[1.1] tracking-tight sm:text-5xl lg:text-[3.15rem]">
-              AI Safety Initiative
-              <br />
-              at&nbsp;IU&nbsp;Bloomington
+      <section className="bg-paper">
+        <div className="mx-auto grid max-w-site items-center gap-12 px-5 pt-16 pb-20 sm:px-8 sm:pt-20 sm:pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16 lg:pt-24 lg:pb-28">
+          <div className="animate-rise">
+            <h1 className="font-display text-[2.4rem] leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.35rem]">
+              AI Safety Initiative at&nbsp;IU&nbsp;Bloomington
             </h1>
-            <p className="animate-rise-delay mt-6 max-w-[23rem] text-base leading-relaxed text-white/75 sm:max-w-[26rem] sm:text-lg">
-              An interdisciplinary research community working to ensure advanced AI benefits humanity.
+            <p className="mt-6 max-w-md text-base leading-relaxed text-muted sm:text-lg">
+              An interdisciplinary research community working to ensure advanced AI benefits
+              humanity.
             </p>
-            <div className="animate-rise-delay-2 mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
+            <div className="mt-9 flex flex-wrap gap-3">
               <a
                 href={DISCORD_INVITE}
                 target="_blank"
                 rel="noreferrer"
-                className="btn-primary"
+                className="btn-solid"
               >
                 Join Discord
               </a>
-              <Link to="/events" className="btn-ghost text-white">
+              <Link to="/events" className="btn-outline">
                 Explore Events
               </Link>
             </div>
           </div>
 
-          <NeuralNetVisual className="animate-rise-delay" />
+          <HeroVisual className="animate-rise-delay mx-auto lg:mx-0 lg:justify-self-end" />
         </div>
       </section>
 
-      <section className="bg-paper">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-[16rem_1fr] lg:gap-[13rem]">
-          <h2 className="text-3xl font-medium tracking-tight text-ink sm:text-4xl">
-            Our Mission
-          </h2>
-          <div className="max-w-3xl space-y-5 text-lg leading-[1.75] text-ink-soft sm:text-xl sm:leading-[1.8]">
+      <section className="bg-surface">
+        <div className="mx-auto grid max-w-site gap-10 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start lg:gap-16">
+          <div className="animate-rise">
+            <h2 className="font-display max-w-md text-3xl leading-[1.15] tracking-tight text-ink sm:text-4xl">
+              Reduce catastrophic risks from advanced AI.
+            </h2>
+          </div>
+          <div className="animate-rise-delay max-w-xl space-y-5 text-base leading-[1.75] text-ink-soft sm:text-lg sm:leading-[1.8]">
             <p>
               It’s hard to miss how fast AI is moving. Frontier AI systems are gaining capability
               faster than our ability to understand, evaluate, or control them, and keeping them
@@ -78,39 +206,21 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-neutral-50">
-        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-24">
-          <h2 className="text-3xl font-medium tracking-tight text-ink sm:text-4xl">What We Do</h2>
+      <section className="bg-paper">
+        <div className="mx-auto grid max-w-site gap-10 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,1.7fr)] lg:items-start lg:gap-8">
+          <h2 className="animate-rise font-display text-3xl leading-[1.15] tracking-tight text-ink sm:text-4xl">
+            What We Do
+          </h2>
 
-          <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="animate-rise-delay grid gap-3 sm:grid-cols-3">
             {activities.map((item) => (
-              <li
-                key={item.title}
-                className="flex h-[28rem] flex-col overflow-hidden border border-line bg-paper sm:h-auto sm:min-h-[24rem]"
-              >
-                <div className="flex min-h-0 flex-[5] items-center justify-center bg-paper px-5 pt-5 pb-2 sm:px-6 sm:pt-6 sm:pb-3">
-                  <img
-                    src={item.image}
-                    alt={item.imageAlt}
-                    className="pointer-events-none h-full w-full select-none object-contain"
-                    draggable={false}
-                  />
-                </div>
-                <div className="flex min-h-0 flex-[2.5] flex-col justify-center px-6 pt-3 pb-7 sm:px-8 sm:pt-4 sm:pb-8">
-                  <h3 className="text-lg font-medium tracking-tight text-ink">{item.title}</h3>
-                  <p className="mt-2.5 text-[0.95rem] leading-relaxed text-muted">{item.copy}</p>
-                </div>
-              </li>
+              <ActivityCard key={item.title} item={item} />
             ))}
           </ul>
         </div>
       </section>
 
-      <JoinCTA
-        id="join"
-        title="New members always welcome."
-        description="No CS or AI background required. Join the Discord for meetings, updates, and discussion."
-      />
+      <JoinCTA id="join" title="New members always welcome." />
     </div>
   )
 }

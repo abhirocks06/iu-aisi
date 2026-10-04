@@ -11,6 +11,7 @@ export const officers = [
     name: 'Abhinav Sisodiya',
     role: 'President',
     blurb: 'Placeholder: leadership bio coming soon.',
+    website: 'https://www.linkedin.com/in/abhinavsisodiya',
   },
   {
     name: 'TBD',

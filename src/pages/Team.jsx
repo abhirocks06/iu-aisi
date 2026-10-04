@@ -2,26 +2,44 @@ import JoinCTA from '../components/JoinCTA'
 import { advisoryBoard, officers } from '../data/team'
 
 function MemberCard({ member }) {
-  return (
-    <li className="flex flex-col items-center border border-line p-5 text-center sm:p-6">
+  const content = (
+    <>
       {member.photo ? (
         <img
           src={member.photo}
           alt={member.name}
           width={448}
           height={560}
-          className="aspect-[4/5] w-full object-cover object-center"
+          className="aspect-[4/5] w-full object-cover"
+          style={{ objectPosition: member.photoPosition ?? 'center' }}
         />
       ) : (
         <div
-          className="flex aspect-[4/5] w-full items-center justify-center bg-neutral-100 text-sm text-muted"
+          className="flex aspect-[4/5] w-full items-center justify-center bg-surface-muted text-sm text-muted"
           aria-hidden="true"
         >
           Photo
         </div>
       )}
       <h3 className="mt-4 text-lg font-medium tracking-tight text-ink">{member.name}</h3>
-      <p className="mt-1 text-sm text-crimson">{member.role}</p>
+      <p className="mt-1 text-sm text-muted">{member.role}</p>
+    </>
+  )
+
+  return (
+    <li>
+      {member.website ? (
+        <a
+          href={member.website}
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-col no-underline transition-opacity hover:opacity-70"
+        >
+          {content}
+        </a>
+      ) : (
+        <div className="flex flex-col">{content}</div>
+      )}
     </li>
   )
 }
@@ -35,18 +53,19 @@ function AdvisorCard({ member }) {
           alt={member.name}
           width={448}
           height={560}
-          className="aspect-[4/5] w-full object-cover object-center"
+          className="aspect-[4/5] w-full object-cover"
+          style={{ objectPosition: member.photoPosition ?? 'center' }}
         />
       ) : (
         <div
-          className="flex aspect-[4/5] w-full items-center justify-center bg-neutral-100 text-sm text-muted"
+          className="flex aspect-[4/5] w-full items-center justify-center bg-surface-muted text-sm text-muted"
           aria-hidden="true"
         >
           Photo
         </div>
       )}
       <h3 className="mt-4 text-lg font-medium tracking-tight text-ink">{member.name}</h3>
-      <p className="mt-1 text-sm text-crimson">{member.role}</p>
+      <p className="mt-1 text-sm text-muted">{member.role}</p>
     </>
   )
 
@@ -57,14 +76,12 @@ function AdvisorCard({ member }) {
           href={member.website}
           target="_blank"
           rel="noreferrer"
-          className="flex flex-col items-center border border-line p-5 text-center no-underline transition-opacity hover:opacity-70 sm:p-6"
+          className="flex flex-col no-underline transition-opacity hover:opacity-70"
         >
           {content}
         </a>
       ) : (
-        <div className="flex flex-col items-center border border-line p-5 text-center sm:p-6">
-          {content}
-        </div>
+        <div className="flex flex-col">{content}</div>
       )}
     </li>
   )
@@ -73,27 +90,33 @@ function AdvisorCard({ member }) {
 export default function Team() {
   return (
     <div className="flex flex-1 flex-col bg-paper">
-      <section className="mx-auto w-full max-w-6xl px-5 pt-16 text-left sm:px-8 sm:pt-20">
-        <h1 className="animate-rise text-4xl font-medium tracking-tight text-ink sm:text-5xl">
-          Team
-        </h1>
+      <section className="bg-paper">
+        <div className="mx-auto w-full max-w-site px-5 pt-16 pb-10 sm:px-8 sm:pt-20 sm:pb-12">
+          <h1 className="animate-rise font-display text-4xl tracking-tight text-ink sm:text-5xl">
+            Team
+          </h1>
+        </div>
       </section>
 
-      <section className="mx-auto w-full max-w-6xl px-5 py-12 text-left sm:px-8 sm:py-16">
+      <section className="mx-auto w-full max-w-site px-5 py-12 sm:px-8 sm:py-16">
         <div className="animate-rise-delay">
-          <h2 className="text-2xl font-medium tracking-tight text-ink">Executive Board</h2>
+          <h2 className="font-display text-2xl tracking-tight text-ink sm:text-3xl">
+            Executive Board
+          </h2>
 
-          <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
             {officers.map((member, index) => (
               <MemberCard key={`${member.role}-${index}`} member={member} />
             ))}
           </ul>
         </div>
 
-        <div className="mt-16">
-          <h2 className="text-2xl font-medium tracking-tight text-ink">Advisory Board</h2>
+        <div className="mt-20 border-t border-line pt-16">
+          <h2 className="font-display text-2xl tracking-tight text-ink sm:text-3xl">
+            Advisory Board
+          </h2>
 
-          <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
             {advisoryBoard.map((member) => (
               <AdvisorCard key={member.name} member={member} />
             ))}
@@ -101,10 +124,7 @@ export default function Team() {
         </div>
       </section>
 
-      <JoinCTA
-        title="Want to join the team?"
-        description="Officer roles fill as we launch. Reach out if you want to help build AISI."
-      />
+      <JoinCTA title="Want to join the team?" />
     </div>
   )
 }
