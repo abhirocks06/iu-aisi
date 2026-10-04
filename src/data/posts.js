@@ -2,6 +2,7 @@ export const CONTACT_EMAIL = 'absiso@iu.edu'
 export const DISCORD_INVITE = 'https://discord.gg/4bjyeXK83'
 export const COURSE_URL = 'https://calum-mcnamara.github.io/ai-ethics/'
 export const BEINVOLVED_URL = 'https://beinvolved.indiana.edu/organization/aisai'
+export const INSTAGRAM_URL = 'https://www.instagram.com/'
 
 export const topics = ['Technical', 'Policy', 'Economics', 'Philosophy']
 
