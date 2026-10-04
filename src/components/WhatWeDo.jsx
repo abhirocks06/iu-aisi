@@ -180,22 +180,38 @@ function drawNetwork(canvas, root) {
   for (const b of outs) {
     for (let i = 0; i < 110; i += 1) splat(red, b.x + gauss() * 10, b.y + gauss() * 10, 0.3)
   }
-  // Dust around the scene, like the hero's older incidents, kept clear of the text.
-  const text = [...root.querySelectorAll('li')].map((el) => {
-    const r = el.getBoundingClientRect()
-    return [r.left - box.left - 16, r.top - box.top - 16, r.right - box.left + 16, r.bottom - box.top + 16]
-  })
+  // Dust frames the scene, like the hero's older incidents: densest near the network and
+  // thinning outward, balanced left and right (less above and below), on roughly a fifth
+  // of the empty space, and never on text or among the weights.
+  const pad = (r, p) => [r.left - box.left - p, r.top - box.top - p, r.right - box.left + p, r.bottom - box.top + p]
+  const text = [...root.querySelectorAll('[data-text]')].map((el) => pad(el.getBoundingClientRect(), 14))
+  const x0 = Math.min(...ins.map((a) => a.x)) - 12
+  const x1 = Math.max(...outs.map((b) => b.x)) + 24
   const net = root.getBoundingClientRect()
-  const inNet = (x, y) =>
-    x > net.left - box.left && x < net.right - box.left && y > net.top - box.top && y < net.bottom - box.top
-  const clear = (x, y) => !inNet(x, y) && !text.some(([l, t, r, b]) => x > l && x < r && y > t && y < b)
+  const top = net.top - box.top
+  const bottom = net.bottom - box.top
+  const clear = (x, y) =>
+    x > 0 && y > 0 && x < W && y < H &&
+    !(x > x0 && x < x1 && y > top && y < bottom) &&
+    !text.some(([l, t, r, b]) => x > l && x < r && y > t && y < b)
   const dust = new Float32Array(gw * gh)
-  for (let c = 0; c < 26; c += 1) {
-    const cx = rand() * W
-    const cy = rand() * H
+  const left = net.left - box.left
+  const right = net.right - box.left
+  const sides = [
+    [0.36, () => [left + 60 - Math.abs(gauss()) * 150, top + rand() * (bottom - top)]],
+    [0.36, () => [right - 40 + Math.abs(gauss()) * 170, top + rand() * (bottom - top)]],
+    [0.14, () => [left + rand() * (right - left), top - Math.abs(gauss()) * 60]],
+    [0.14, () => [left + rand() * (right - left), bottom + Math.abs(gauss()) * 60]],
+  ]
+  let placed = 0
+  for (let tries = 0; tries < 400 && placed < 22; tries += 1) {
+    let r = rand()
+    const [, pick] = sides.find(([w]) => (r -= w) < 0) ?? sides[0]
+    const [cx, cy] = pick()
     if (!clear(cx, cy)) continue
-    const sigma = 14 + rand() * 26
-    for (let i = 0; i < 40; i += 1) {
+    placed += 1
+    const sigma = 12 + rand() * 24
+    for (let i = 0; i < 30 + rand() * 30; i += 1) {
       const x = cx + gauss() * sigma
       const y = cy + gauss() * sigma
       if (clear(x, y)) splat(dust, x, y, 0.5)
@@ -277,7 +293,7 @@ function Network() {
 
   return (
     <div ref={ref} className="relative hidden grid-cols-[14rem_minmax(6rem,11rem)_minmax(0,34rem)] lg:grid">
-      <canvas ref={canvasRef} className="wwd-reveal pointer-events-none absolute -top-20 -right-[22rem] -bottom-20 -left-16 h-[calc(100%+10rem)] w-[calc(100%+26rem)]" aria-hidden="true" />
+      <canvas ref={canvasRef} className="wwd-reveal pointer-events-none absolute -top-20 -right-[22rem] -bottom-20 -left-[16rem] h-[calc(100%+10rem)] w-[calc(100%+38rem)]" aria-hidden="true" />
 
       {/* Input layer: every topic, grouped by activity, spread over the layer's height. */}
       <ul className="flex flex-col justify-between py-2">
@@ -288,7 +304,7 @@ function Network() {
               className={`wwd-topic flex items-center justify-end gap-4 text-sm text-ink-soft ${j === 0 && i > 0 ? 'mt-5' : ''}`}
               style={{ transitionDelay: `${300 + (i * 3 + j) * 60}ms` }}
             >
-              {t}
+              <span data-text>{t}</span>
               <span data-in={i} aria-hidden="true" className="h-2.5 w-2.5 shrink-0" />
             </li>
           )),
@@ -301,8 +317,8 @@ function Network() {
         {activities.map((a) => (
           <li key={a.title} className="relative pl-12">
             <span data-out aria-hidden="true" className="absolute top-[0.85rem] left-0 h-4 w-4" />
-            <h3 className="font-display text-[2.35rem] leading-[1.1] tracking-tight text-ink">{a.title}</h3>
-            <p className="mt-3 max-w-[30rem] text-base leading-relaxed text-muted">{a.copy}</p>
+            <h3 data-text className="font-display text-[2.35rem] leading-[1.1] tracking-tight text-ink">{a.title}</h3>
+            <p data-text className="mt-3 max-w-[30rem] text-base leading-relaxed text-muted">{a.copy}</p>
           </li>
         ))}
       </ol>
