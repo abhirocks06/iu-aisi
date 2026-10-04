@@ -29,7 +29,7 @@ export default function Resources() {
       <section className="bg-paper">
         <div className="mx-auto w-full max-w-site px-5 pt-16 pb-10 sm:px-8 sm:pt-20 sm:pb-12">
           <h1 className="animate-rise font-display text-4xl tracking-tight text-ink sm:text-5xl">
-            What is AI Safety
+            Resources
           </h1>
         </div>
       </section>

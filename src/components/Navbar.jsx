@@ -4,8 +4,8 @@ import { createPortal } from 'react-dom'
 import { DISCORD_INVITE } from '../data/posts'
 
 const links = [
-  { to: '/what-is-ai-safety', label: 'What is AI Safety' },
   { to: '/events', label: 'Events' },
+  { to: '/resources', label: 'Resources' },
   { to: '/team', label: 'Team' },
 ]
 
