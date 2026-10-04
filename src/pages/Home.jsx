@@ -156,7 +156,7 @@ function ActivityCard({ item }) {
   return (
     <li
       className={[
-        'relative flex min-h-[22rem] flex-col overflow-hidden p-6 text-white sm:min-h-[26rem] sm:p-7',
+        'relative flex min-h-[16rem] flex-col overflow-hidden p-6 text-white sm:min-h-[26rem] sm:p-7',
         item.tone,
       ].join(' ')}
     >

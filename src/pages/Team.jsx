@@ -104,7 +104,7 @@ export default function Team() {
             Executive Board
           </h2>
 
-          <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+          <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 lg:grid-cols-4">
             {officers.map((member, index) => (
               <MemberCard key={`${member.role}-${index}`} member={member} />
             ))}
@@ -116,7 +116,7 @@ export default function Team() {
             Advisory Board
           </h2>
 
-          <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+          <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 lg:grid-cols-4">
             {advisoryBoard.map((member) => (
               <AdvisorCard key={member.name} member={member} />
             ))}

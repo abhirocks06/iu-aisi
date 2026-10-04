@@ -10,7 +10,7 @@ export default function Events() {
         </h1>
       </section>
 
-      <section className="mx-auto w-full max-w-site px-5 py-12 text-left sm:px-8 sm:py-16">
+      <section className="mx-auto w-full max-w-site px-5 pt-10 pb-16 text-left sm:px-8 sm:pt-12 sm:pb-20">
         <EventsCalendar />
       </section>
 
