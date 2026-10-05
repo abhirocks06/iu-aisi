@@ -178,6 +178,21 @@
   }
 }
 
+.cal-month {
+  animation: cal-month-in 220ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@keyframes cal-month-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--cal-shift, 0px));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -224,7 +239,8 @@
   .animate-rise-delay,
   .animate-rise-delay-2,
   .mobile-menu-overlay,
-  .mobile-menu-item {
+  .mobile-menu-item,
+  .cal-month {
     animation: none;
   }
 }

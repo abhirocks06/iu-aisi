@@ -12,7 +12,7 @@ export default function HeroVisual({ className = '' }) {
         alt=""
         width={1200}
         height={960}
-        className="pointer-events-none relative z-10 h-full w-full object-cover object-center select-none"
+        className="pointer-events-none relative z-10 h-full w-full scale-[1.05] object-cover object-center select-none"
         draggable={false}
       />
     </div>

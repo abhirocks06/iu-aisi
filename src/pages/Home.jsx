@@ -6,7 +6,7 @@ import { DISCORD_INVITE } from '../data/posts'
 const activities = [
   {
     title: 'Discussion Meetings',
-    copy: 'Weekly roundtables on new AI developments, emerging capabilities, and U.S.-China race at the frontier.',
+    copy: 'Weekly roundtables on new AI developments and the U.S.-China race at the frontier.',
     tone: 'bg-[#9a3f38]',
     art: 'discussion',
   },
@@ -18,7 +18,7 @@ const activities = [
   },
   {
     title: 'Community Events',
-    copy: 'Speaker panels and networking sessions with researchers, policymakers, and industry leaders.',
+    copy: 'Speaker panels featuring researchers, policymakers, and industry leaders.',
     tone: 'bg-crimson-deep',
     art: 'events',
   },
@@ -154,7 +154,7 @@ function ActivityCard({ item }) {
   return (
     <li
       className={[
-        'relative flex min-h-[22rem] flex-col overflow-hidden p-6 text-white sm:min-h-[26rem] sm:p-7',
+        'relative flex min-h-[14rem] flex-col overflow-hidden p-6 text-white sm:min-h-[26rem] sm:p-7',
         item.tone,
       ].join(' ')}
     >
@@ -163,7 +163,7 @@ function ActivityCard({ item }) {
         {item.copy}
       </p>
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[50%] opacity-90"
+        className="pointer-events-none absolute -inset-x-[12%] -bottom-8 h-[62%] scale-110 opacity-90 sm:inset-x-0 sm:bottom-0 sm:h-[50%] sm:scale-100"
         aria-hidden="true"
       >
         <CardArt kind={item.art} />
@@ -181,7 +181,7 @@ export default function Home() {
             <h1 className="font-display text-[2.4rem] leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.35rem]">
               AI Safety Initiative at&nbsp;IU&nbsp;Bloomington
             </h1>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-muted sm:text-lg">
+            <p className="mt-6 max-w-[22.75rem] text-base leading-relaxed text-muted sm:max-w-md sm:text-lg">
               An interdisciplinary research community working to ensure advanced AI benefits
               humanity.
             </p>
