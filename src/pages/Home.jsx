@@ -219,7 +219,7 @@ export default function Home() {
               time.
             </p>
             <p>
-              We’re a community of students at Indiana University working
+              We’re a community of students and faculty at Indiana University working
               to reduce catastrophic risks from advanced AI. We study how these models behave,
               along with the ethical, economic, and geopolitical implications of deploying them.
             </p>
