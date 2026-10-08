@@ -90,7 +90,7 @@ export default function Team() {
         </div>
       </section>
 
-      <JoinCTA title="Interested in joining the board?" />
+      <JoinCTA mode="partner" title="Want to join the board?" />
     </div>
   )
 }

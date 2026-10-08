@@ -14,15 +14,7 @@ export default function Events() {
         <EventsCalendar />
       </section>
 
-      <JoinCTA
-        mode="partner"
-        title={
-          <>
-            Interested in partnering
-            <br className="sm:hidden" /> with us?
-          </>
-        }
-      />
+      <JoinCTA mode="partner" title="Interested in partnering with us?" />
     </div>
   )
 }

@@ -1,10 +1,5 @@
 import { CONTACT_EMAIL, DISCORD_INVITE } from '../data/posts'
 
-const socialActions = [
-  { label: 'Follow on LinkedIn', href: 'https://www.linkedin.com/company/143631076', primary: true },
-  { label: 'Follow on X', href: 'https://x.com/', primary: false },
-]
-
 export default function JoinCTA({
   id,
   title = 'New members always welcome.',
@@ -23,46 +18,19 @@ export default function JoinCTA({
           ) : null}
         </div>
         <div className="flex flex-wrap items-center justify-center gap-3 md:justify-end">
-          {mode === 'social' ? (
-            socialActions.map((action) => (
-              <a
-                key={action.label}
-                href={action.href}
-                target="_blank"
-                rel="noreferrer"
-                className={action.primary ? 'btn-solid' : 'btn-outline'}
-              >
-                {action.label}
-              </a>
-            ))
-          ) : mode === 'partner' ? (
-            <>
-              <a href={`mailto:${CONTACT_EMAIL}`} className="btn-solid">
-                Email us
-              </a>
-              <a
-                href={DISCORD_INVITE}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-outline"
-              >
-                Join Discord
-              </a>
-            </>
+          {mode === 'partner' ? (
+            <a href={`mailto:${CONTACT_EMAIL}`} className="btn-solid">
+              Contact us
+            </a>
           ) : (
-            <>
-              <a
-                href={DISCORD_INVITE}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-solid"
-              >
-                Join Discord
-              </a>
-              <a href={`mailto:${CONTACT_EMAIL}`} className="btn-outline">
-                Email us
-              </a>
-            </>
+            <a
+              href={DISCORD_INVITE}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-solid"
+            >
+              Join Discord
+            </a>
           )}
         </div>
       </div>
