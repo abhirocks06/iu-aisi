@@ -153,7 +153,7 @@ export default function Navbar() {
               }
             }}
           >
-            <span className="text-base font-medium tracking-[0.14em] text-ink uppercase">
+            <span className="text-base font-medium tracking-[0.08em] text-ink uppercase">
               AISI
             </span>
           </Link>
