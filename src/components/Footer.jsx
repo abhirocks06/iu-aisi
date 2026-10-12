@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { BEINVOLVED_URL, DISCORD_INVITE, INSTAGRAM_URL } from '../data/posts'
+import { BEINVOLVED_URL, DISCORD_INVITE, INSTAGRAM_URL } from '../data/site'
 
 const navLinks = [
   { to: '/events', label: 'Events' },

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import ActivityVisual from '../components/ActivityVisual'
 import HeroVisual from '../components/HeroVisual'
 import JoinCTA from '../components/JoinCTA'
-import { DISCORD_INVITE } from '../data/posts'
+import { DISCORD_INVITE } from '../data/site'
 
 const activities = [
   {

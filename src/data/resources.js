@@ -1,4 +1,4 @@
-import { COURSE_URL } from './posts'
+import { COURSE_URL } from './site'
 
 export const resourceSections = [
   {

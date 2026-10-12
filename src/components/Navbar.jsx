@@ -1,7 +1,7 @@
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { DISCORD_INVITE } from '../data/posts'
+import { DISCORD_INVITE } from '../data/site'
 
 const links = [
   { to: '/events', label: 'Events' },

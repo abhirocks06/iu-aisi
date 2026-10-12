@@ -1,4 +1,4 @@
-import { CONTACT_EMAIL, DISCORD_INVITE } from '../data/posts'
+import { CONTACT_EMAIL, DISCORD_INVITE } from '../data/site'
 
 export default function JoinCTA({
   id,

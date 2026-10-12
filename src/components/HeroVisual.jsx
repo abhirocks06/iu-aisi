@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react'
 
 /*
- * Editorial hero art — Dorian Gray face on edge-faded glitch dust
+ * Hero art — Dorian Gray face on edge-faded glitch dust
  * (same halftone language as the What we do marks).
  */
 

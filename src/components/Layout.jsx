@@ -2,12 +2,10 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { useEffect, useLayoutEffect } from 'react'
 import Navbar from './Navbar'
 import Footer from './Footer'
-import { getPostBySlug } from '../data/posts'
 
 const PAGE_TITLES = {
   '/': 'Home',
   '/events': 'Events',
-  '/editorial': 'Editorial',
   '/resources': 'Resources',
   '/team': 'Team',
 }
@@ -17,14 +15,6 @@ const SITE_NAME = 'AI Safety Initiative @ IU'
 function titleForPath(pathname) {
   const exact = PAGE_TITLES[pathname]
   if (exact) return `${exact} | ${SITE_NAME}`
-
-  const editorialMatch = pathname.match(/^\/editorial\/([^/]+)$/)
-  if (editorialMatch) {
-    const post = getPostBySlug(editorialMatch[1])
-    if (post) return `${post.title} | ${SITE_NAME}`
-    return `Editorial | ${SITE_NAME}`
-  }
-
   return SITE_NAME
 }
 
