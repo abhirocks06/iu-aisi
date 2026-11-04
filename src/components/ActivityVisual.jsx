@@ -1,8 +1,8 @@
 import { useLayoutEffect, useRef } from 'react'
 
 /*
- * Marks under What we do — hero WireGraph language (halftone neurons, hairlines),
- * each shaped so it reads as that activity: roundtable, layered net, stage + audience.
+ * What we do marks — same crimson / halftone language as the hero,
+ * drawn quiet and editorial (soft plate, sparse silhouette, clear metaphor).
  */
 
 const CELL = 5
@@ -29,7 +29,7 @@ function makeRand(seed0) {
   return { rand, gauss }
 }
 
-function dustCloud(g, W, H, points, crimson, seed) {
+function dustCloud(g, W, H, points, crimson, seed, amount = 18) {
   const { rand, gauss } = makeRand(seed)
   const gw = Math.ceil(W / CELL) + 1
   const gh = Math.ceil(H / CELL) + 1
@@ -44,21 +44,21 @@ function dustCloud(g, W, H, points, crimson, seed) {
     }
   }
   for (const p of points) {
-    for (let i = 0; i < 36; i += 1) splat(p.x + gauss() * 12, p.y + gauss() * 12, 0.28)
+    for (let i = 0; i < amount; i += 1) splat(p.x + gauss() * 9, p.y + gauss() * 9, 0.22)
   }
-  for (let i = 0; i < 14; i += 1) {
-    const x = W * (0.12 + rand() * 0.76)
-    const y = H * (0.18 + rand() * 0.7)
-    const sigma = 16 + rand() * 20
-    for (let j = 0; j < 14; j += 1) splat(x + gauss() * sigma, y + gauss() * sigma, 0.2)
+  for (let i = 0; i < 6; i += 1) {
+    const x = W * (0.18 + rand() * 0.64)
+    const y = H * (0.22 + rand() * 0.56)
+    const sigma = 12 + rand() * 14
+    for (let j = 0; j < 8; j += 1) splat(x + gauss() * sigma, y + gauss() * sigma, 0.14)
   }
   g.fillStyle = crimson
-  g.globalAlpha = 0.4
+  g.globalAlpha = 0.28
   for (let y = 0; y < gh; y += 1) {
     for (let x = 0; x < gw; x += 1) {
       const v = grid[y * gw + x]
-      if (v < 0.08) continue
-      const d = Math.min(CELL - 1, Math.max(1, Math.round(Math.sqrt(v * 0.55) * CELL * 0.5)))
+      if (v < 0.1) continue
+      const d = Math.min(CELL - 1, Math.max(1, Math.round(Math.sqrt(v * 0.5) * CELL * 0.45)))
       g.fillRect(x * CELL - (d >> 1), y * CELL - (d >> 1), d, d)
     }
   }
@@ -87,7 +87,7 @@ function drawNeuron(g, x, y, r, crimson, paper) {
     }
   }
   g.restore()
-  g.globalAlpha = 0.4
+  g.globalAlpha = 0.35
   g.strokeStyle = crimson
   g.lineWidth = 1
   g.beginPath()
@@ -102,12 +102,23 @@ function drawOpen(g, x, y, r, accent, fill) {
   g.arc(x, y, r, 0, Math.PI * 2)
   g.fill()
   g.strokeStyle = accent
-  g.globalAlpha = 0.85
+  g.globalAlpha = 0.8
   g.lineWidth = 1.15
   g.beginPath()
   g.arc(x, y, r, 0, Math.PI * 2)
   g.stroke()
   g.globalAlpha = 1
+}
+
+function roundRect(g, x, y, w, h, r) {
+  const rr = Math.min(r, w / 2, h / 2)
+  g.beginPath()
+  g.moveTo(x + rr, y)
+  g.arcTo(x + w, y, x + w, y + h, rr)
+  g.arcTo(x + w, y + h, x, y + h, rr)
+  g.arcTo(x, y + h, x, y, rr)
+  g.arcTo(x, y, x + w, y, rr)
+  g.closePath()
 }
 
 function curve(g, a, b, lift = 0.35) {
@@ -127,111 +138,141 @@ function line(g, a, b) {
 }
 
 function paintDiscussion(g, W, H, accent, shade, ink, openFill) {
-  // Roundtable: equal seats in a ring — weekly discussion.
-  const n = 6
+  // Quiet roundtable — equal seats, empty center, two dialogue arcs.
+  const n = 5
   const cx = W * 0.5
   const cy = H * 0.52
-  const rx = W * 0.3
-  const ry = H * 0.28
+  const rx = W * 0.28
+  const ry = H * 0.26
   const seats = Array.from({ length: n }, (_, i) => {
     const t = -Math.PI / 2 + (i / n) * Math.PI * 2
     return { x: cx + Math.cos(t) * rx, y: cy + Math.sin(t) * ry }
   })
-  dustCloud(g, W, H, seats, accent, 17)
+  dustCloud(g, W, H, seats, accent, 17, 12)
 
-  // Table ellipse (empty center).
   g.strokeStyle = accent
-  g.globalAlpha = 0.2
-  g.lineWidth = 1.25
+  g.globalAlpha = 0.18
+  g.lineWidth = 1.2
   g.beginPath()
-  g.ellipse(cx, cy, rx * 0.42, ry * 0.42, 0, 0, Math.PI * 2)
+  g.ellipse(cx, cy, rx * 0.38, ry * 0.38, 0, 0, Math.PI * 2)
   g.stroke()
   g.globalAlpha = 1
 
   g.strokeStyle = ink
   g.lineWidth = 1
-  for (let i = 0; i < n; i += 1) curve(g, seats[i], seats[(i + 1) % n], 0.08)
+  for (let i = 0; i < n; i += 1) curve(g, seats[i], seats[(i + 1) % n], 0.06)
 
-  // Dialogue accents across the table.
   g.strokeStyle = accent
-  g.globalAlpha = 0.55
-  g.lineWidth = 1.2
-  curve(g, seats[0], seats[3], 0.15)
-  curve(g, seats[1], seats[4], 0.12)
+  g.globalAlpha = 0.5
+  g.lineWidth = 1.15
+  curve(g, seats[0], seats[2], 0.18)
+  curve(g, seats[0], seats[3], 0.16)
   g.globalAlpha = 1
 
   seats.forEach((p, i) => {
-    if (i % 2 === 0) drawNeuron(g, p.x, p.y, 9, accent, shade)
-    else drawOpen(g, p.x, p.y, 5, accent, openFill)
+    if (i === 0) drawNeuron(g, p.x, p.y, 10, accent, shade)
+    else drawOpen(g, p.x, p.y, 4.5, accent, openFill)
   })
 }
 
 function paintResearch(g, W, H, accent, shade, ink, openFill) {
-  // Three-layer net: inputs → hidden → outputs — research / models.
-  const layers = [
-    Array.from({ length: 4 }, (_, i) => ({ x: W * 0.2, y: H * (0.22 + i * 0.18) })),
-    Array.from({ length: 5 }, (_, i) => ({ x: W * 0.5, y: H * (0.16 + i * 0.16) })),
-    Array.from({ length: 3 }, (_, i) => ({ x: W * 0.8, y: H * (0.28 + i * 0.2) })),
+  // Stacked eval sheets + a sparse inspect path — research / interpretability.
+  const sheets = [
+    { x: W * 0.16, y: H * 0.18, w: W * 0.52, h: H * 0.58 },
+    { x: W * 0.24, y: H * 0.24, w: W * 0.52, h: H * 0.58 },
+    { x: W * 0.32, y: H * 0.3, w: W * 0.52, h: H * 0.58 },
   ]
-  dustCloud(g, W, H, layers.flat(), accent, 29)
+  const focus = { x: sheets[2].x + sheets[2].w * 0.55, y: sheets[2].y + sheets[2].h * 0.42 }
+  const inputs = [
+    { x: sheets[0].x + sheets[0].w * 0.28, y: sheets[0].y + sheets[0].h * 0.22 },
+    { x: sheets[0].x + sheets[0].w * 0.28, y: sheets[0].y + sheets[0].h * 0.48 },
+    { x: sheets[0].x + sheets[0].w * 0.28, y: sheets[0].y + sheets[0].h * 0.74 },
+  ]
+  const outputs = [
+    { x: sheets[2].x + sheets[2].w * 0.82, y: sheets[2].y + sheets[2].h * 0.28 },
+    { x: sheets[2].x + sheets[2].w * 0.82, y: sheets[2].y + sheets[2].h * 0.58 },
+  ]
+  dustCloud(g, W, H, [focus, ...inputs, ...outputs], accent, 29, 10)
+
+  sheets.forEach((s, i) => {
+    g.strokeStyle = i === 2 ? accent : ink
+    g.globalAlpha = i === 2 ? 0.45 : 0.28
+    g.lineWidth = i === 2 ? 1.25 : 1
+    roundRect(g, s.x, s.y, s.w, s.h, 10)
+    g.stroke()
+  })
+  g.globalAlpha = 1
 
   g.strokeStyle = ink
   g.lineWidth = 1
-  g.globalAlpha = 0.9
-  for (let L = 0; L < layers.length - 1; L += 1) {
-    for (const a of layers[L]) {
-      for (const b of layers[L + 1]) line(g, a, b)
-    }
-  }
+  g.globalAlpha = 0.85
+  inputs.forEach((p) => line(g, p, focus))
+  outputs.forEach((p) => line(g, focus, p))
   g.globalAlpha = 1
-
-  // A few accent “active” weights.
-  g.strokeStyle = accent
-  g.globalAlpha = 0.65
-  g.lineWidth = 1.2
-  ;[
-    [layers[0][1], layers[1][2]],
-    [layers[0][2], layers[1][1]],
-    [layers[1][1], layers[2][0]],
-    [layers[1][3], layers[2][1]],
-    [layers[1][2], layers[2][2]],
-  ].forEach(([a, b]) => line(g, a, b))
-  g.globalAlpha = 1
-
-  layers[0].forEach((p) => drawOpen(g, p.x, p.y, 4, accent, openFill))
-  layers[1].forEach((p, i) =>
-    i === 2 ? drawNeuron(g, p.x, p.y, 10, accent, shade) : drawOpen(g, p.x, p.y, 4.5, accent, openFill),
-  )
-  layers[2].forEach((p) => drawNeuron(g, p.x, p.y, 8, accent, shade))
-}
-
-function paintEvents(g, W, H, accent, shade, ink, openFill) {
-  // Stage + audience rows — speaker panel / gathering.
-  const speaker = { x: W * 0.5, y: H * 0.22 }
-  const rows = [
-    Array.from({ length: 5 }, (_, i) => ({ x: W * (0.22 + i * 0.14), y: H * 0.48 })),
-    Array.from({ length: 7 }, (_, i) => ({ x: W * (0.14 + i * 0.12), y: H * 0.68 })),
-  ]
-  dustCloud(g, W, H, [speaker, ...rows.flat()], accent, 41)
-
-  g.strokeStyle = ink
-  g.lineWidth = 1
-  for (const row of rows) {
-    for (const seat of row) curve(g, speaker, seat, 0.08)
-  }
 
   g.strokeStyle = accent
   g.globalAlpha = 0.55
-  g.lineWidth = 1.15
-  curve(g, speaker, rows[0][2], 0.1)
-  curve(g, speaker, rows[1][3], 0.12)
+  g.lineWidth = 1.2
+  line(g, inputs[1], focus)
+  line(g, focus, outputs[0])
   g.globalAlpha = 1
 
-  rows.flat().forEach((p) => drawOpen(g, p.x, p.y, 3.5, accent, openFill))
-  drawNeuron(g, speaker.x, speaker.y, 12, accent, shade)
-  // Side panelists on stage.
-  drawNeuron(g, W * 0.34, H * 0.24, 7, accent, shade)
-  drawNeuron(g, W * 0.66, H * 0.24, 7, accent, shade)
+  inputs.forEach((p) => drawOpen(g, p.x, p.y, 3.8, accent, openFill))
+  outputs.forEach((p) => drawOpen(g, p.x, p.y, 3.8, accent, openFill))
+  drawNeuron(g, focus.x, focus.y, 11, accent, shade)
+}
+
+function paintEvents(g, W, H, accent, shade, ink, openFill) {
+  // Stage platform + panel, soft rays to a shallow audience arc.
+  const stageY = H * 0.34
+  const speakers = [
+    { x: W * 0.32, y: stageY - H * 0.02 },
+    { x: W * 0.5, y: stageY - H * 0.06 },
+    { x: W * 0.68, y: stageY - H * 0.02 },
+  ]
+  const audience = Array.from({ length: 6 }, (_, i) => {
+    const t = i / 5
+    return {
+      x: W * (0.18 + t * 0.64),
+      y: H * (0.62 + Math.sin(t * Math.PI) * 0.06),
+    }
+  })
+  dustCloud(g, W, H, [...speakers, ...audience], accent, 41, 11)
+
+  g.strokeStyle = accent
+  g.globalAlpha = 0.35
+  g.lineWidth = 1.2
+  roundRect(g, W * 0.16, stageY + H * 0.02, W * 0.68, H * 0.06, 6)
+  g.stroke()
+  g.globalAlpha = 1
+
+  g.strokeStyle = ink
+  g.lineWidth = 1
+  g.globalAlpha = 0.75
+  for (const seat of audience) curve(g, speakers[1], seat, 0.05)
+  g.globalAlpha = 1
+
+  g.strokeStyle = accent
+  g.globalAlpha = 0.5
+  g.lineWidth = 1.15
+  curve(g, speakers[1], audience[2], 0.08)
+  curve(g, speakers[1], audience[3], 0.1)
+  g.globalAlpha = 1
+
+  // Soft canopy above the panel.
+  g.strokeStyle = accent
+  g.globalAlpha = 0.22
+  g.lineWidth = 1
+  g.beginPath()
+  g.moveTo(W * 0.22, H * 0.2)
+  g.quadraticCurveTo(W * 0.5, H * 0.08, W * 0.78, H * 0.2)
+  g.stroke()
+  g.globalAlpha = 1
+
+  audience.forEach((p) => drawOpen(g, p.x, p.y, 3.4, accent, openFill))
+  drawNeuron(g, speakers[0].x, speakers[0].y, 7.5, accent, shade)
+  drawNeuron(g, speakers[1].x, speakers[1].y, 11, accent, shade)
+  drawNeuron(g, speakers[2].x, speakers[2].y, 7.5, accent, shade)
 }
 
 function paint(canvas, kind, onDark) {
@@ -241,10 +282,9 @@ function paint(canvas, kind, onDark) {
   if (!W || !H) return
   const crimson = css('--color-crimson', '#990000')
   const paper = css('--color-paper', '#fffffd')
-  // On crimson cards: white marks with deep shade; on paper: crimson marks.
   const accent = onDark ? '#ffffff' : crimson
   const shade = onDark ? 'rgba(122, 0, 0, 0.55)' : paper
-  const ink = onDark ? 'rgba(255, 255, 255, 0.28)' : 'rgba(23, 23, 23, 0.22)'
+  const ink = onDark ? 'rgba(255, 255, 255, 0.28)' : 'rgba(23, 23, 23, 0.2)'
   const openFill = onDark ? 'rgba(255, 255, 255, 0.06)' : paper
   const dpr = Math.min(window.devicePixelRatio || 1, 2)
   canvas.width = Math.round(W * dpr)
