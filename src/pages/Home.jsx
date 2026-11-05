@@ -87,18 +87,14 @@ export default function Home() {
             {activities.map((item) => (
               <li
                 key={item.title}
-                className="flex flex-col overflow-hidden border border-line"
+                className="flex flex-col border border-line px-5 pb-5 pt-6 sm:px-6 sm:pb-6 sm:pt-7"
               >
-                <div className="aspect-[5/4] w-full bg-surface-muted">
+                <h3 className="text-xl font-medium tracking-tight text-ink">{item.title}</h3>
+                <p className="mt-3 text-[0.95rem] leading-relaxed text-muted">
+                  {item.copy}
+                </p>
+                <div className="mt-8 aspect-[5/4] w-full">
                   <ActivityVisual kind={item.art} />
-                </div>
-                <div className="px-5 pb-5 pt-6 sm:px-6 sm:pb-6 sm:pt-7">
-                  <h3 className="text-xl font-medium tracking-tight text-ink">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-[0.95rem] leading-relaxed text-muted">
-                    {item.copy}
-                  </p>
                 </div>
               </li>
             ))}
