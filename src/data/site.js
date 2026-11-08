@@ -1,5 +1,5 @@
 export const CONTACT_EMAIL = 'aisiclub@iu.edu'
-export const DISCORD_INVITE = 'https://discord.gg/MPbRtaSQD'
+export const DISCORD_INVITE = 'https://discord.gg/RcXU4JA2Kk'
 export const COURSE_URL = 'https://calum-mcnamara.github.io/ai-ethics/'
 export const BEINVOLVED_URL = 'https://beinvolved.indiana.edu/organization/aisai'
 export const INSTAGRAM_URL = 'https://www.instagram.com/'
